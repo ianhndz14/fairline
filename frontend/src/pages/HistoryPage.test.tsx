@@ -48,14 +48,14 @@ describe('HistoryPage', () => {
     mockApi({ '/api/events': [match(1, 2, 0)], '/api/events/1/history': history, '/api/track-record': trackRecord })
     renderPage('/history/1', '/history/:eventId?', <HistoryPage />)
 
-    expect(await screen.findByText('50.0%')).toBeInTheDocument()
-    expect(
-      screen.getByText(/1 of 2\), against 30.0% expected by the market and 40.0% by the model/),
-    ).toBeInTheDocument()
+    expect(await screen.findByText('50.0%')).toBeInTheDocument() // hit rate
+    expect(screen.getByText('1/2')).toBeInTheDocument() // hits / settled
+    expect(screen.getByText('30.0%')).toBeInTheDocument() // market expected
+    expect(screen.getByText('40.0%')).toBeInTheDocument() // model expected
     expect(screen.getByText(/Too few settled matches/)).toBeInTheDocument()
     expect(screen.getByLabelText('hit')).toBeInTheDocument()
     expect(screen.getByLabelText('miss')).toBeInTheDocument()
-    expect(screen.getByText('pending')).toBeInTheDocument()
+    expect(screen.getByText('Pending')).toBeInTheDocument()
   })
 
   it('names outcome buttons after the teams and explains a chart with too little data', async () => {

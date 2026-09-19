@@ -41,3 +41,6 @@ desktop.ini
 # ---------- Local-only files ----------
 .claude/
 Fairline-Roadmap.pdf
+
+# Superdesign (design tool) local state
+.superdesign/

@@ -13,76 +13,86 @@ export default function OpportunitiesPage() {
 
   return (
     <>
-      <h1>Opportunities</h1>
-      <p className="muted">
-        Upcoming outcomes the model rates higher than Kalshi's normalized price, biggest edge first.
-      </p>
-
-      <div className="toolbar">
-        <label>
-          Minimum edge (pts)
-          <input
-            type="number"
-            step="0.5"
-            inputMode="decimal"
-            value={minEdge ?? (data ? (data.minEdge * 100).toString() : '')}
-            onChange={(e) => setParams({ minEdge: e.target.value }, { replace: true })}
-          />
-        </label>
-        {data && (
-          <span className="muted small">
-            {data.lastPriceUpdate ? `Prices updated ${timeAgo(data.lastPriceUpdate)}` : 'No prices fetched yet'}
-            {' · '}
-            {data.opportunities.length} {data.opportunities.length === 1 ? 'outcome' : 'outcomes'}
-          </span>
-        )}
-      </div>
-
-      {error && <p className="error">{error}</p>}
-      {loading && !data && <p className="muted">Loading…</p>}
-
-      {data && data.opportunities.length === 0 && (
-        <p className="muted">No upcoming outcome clears {(data.minEdge * 100).toFixed(1)} pts right now.</p>
-      )}
-
-      {data && data.opportunities.length > 0 && (
-        <div className="table-wrap">
-          <table className="data">
-            <thead>
-              <tr>
-                <th scope="col">Kickoff</th>
-                <th scope="col">Match</th>
-                <th scope="col">Outcome</th>
-                <th scope="col" className="num">
-                  Model
-                </th>
-                <th scope="col" className="num">
-                  Market
-                </th>
-                <th scope="col" className="num">
-                  Edge
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.opportunities.map((o) => (
-                <tr key={`${o.eventId}-${o.outcome}`}>
-                  <td className="nowrap">{formatKickoff(o.kickoff)}</td>
-                  <td>
-                    <Link to={`/history/${o.eventId}?outcome=${o.outcome}`}>
-                      {o.homeTeam} v {o.awayTeam}
-                    </Link>
-                  </td>
-                  <td>{outcomeLabel(o.outcome, o.homeTeam, o.awayTeam)}</td>
-                  <td className="num">{percent(o.model)}</td>
-                  <td className="num">{percent(o.market)}</td>
-                  <td className="num positive">{points(o.edge)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <h1 className="sr-only">Opportunities</h1>
+      <section className="panel">
+        <header className="panel-header">
+          <h2 className="panel-title">Opportunities · model above market</h2>
+          {data && (
+            <span className="micro">
+              {data.opportunities.length} {data.opportunities.length === 1 ? 'outcome' : 'outcomes'}
+            </span>
+          )}
+        </header>
+        <div className="panel-body">
+          <div className="toolbar">
+            <label className="field">
+              <span className="micro">Min edge · pts</span>
+              <input
+                type="number"
+                step="0.5"
+                inputMode="decimal"
+                aria-label="Minimum edge (pts)"
+                value={minEdge ?? (data ? (data.minEdge * 100).toString() : '')}
+                onChange={(e) => setParams({ minEdge: e.target.value }, { replace: true })}
+              />
+            </label>
+            {data && (
+              <span className="note">
+                {data.lastPriceUpdate ? `Prices updated ${timeAgo(data.lastPriceUpdate)}` : 'No prices fetched yet'}
+                {' · sorted by edge, biggest first'}
+              </span>
+            )}
+          </div>
         </div>
-      )}
+
+        {error && <p className="error empty">{error}</p>}
+        {loading && !data && <p className="empty">Loading…</p>}
+
+        {data && data.opportunities.length === 0 && (
+          <p className="empty">No upcoming outcome clears {(data.minEdge * 100).toFixed(1)} pts right now.</p>
+        )}
+
+        {data && data.opportunities.length > 0 && (
+          <div className="table-wrap">
+            <table className="data">
+              <thead>
+                <tr>
+                  <th scope="col">Kickoff</th>
+                  <th scope="col">Match</th>
+                  <th scope="col">Outcome</th>
+                  <th scope="col" className="num">
+                    Model
+                  </th>
+                  <th scope="col" className="num">
+                    Market
+                  </th>
+                  <th scope="col" className="num">
+                    Edge
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.opportunities.map((o) => (
+                  <tr key={`${o.eventId}-${o.outcome}`}>
+                    <td className="mono nowrap muted">{formatKickoff(o.kickoff)}</td>
+                    <td>
+                      <Link to={`/history/${o.eventId}?outcome=${o.outcome}`}>
+                        {o.homeTeam} v {o.awayTeam}
+                      </Link>
+                    </td>
+                    <td>{outcomeLabel(o.outcome, o.homeTeam, o.awayTeam)}</td>
+                    <td className="num">{percent(o.model)}</td>
+                    <td className="num">{percent(o.market)}</td>
+                    <td className="num up nowrap">
+                      {points(o.edge)} <span aria-hidden="true">▲</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
     </>
   )
 }

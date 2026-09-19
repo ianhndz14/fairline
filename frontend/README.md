@@ -2,6 +2,12 @@
 
 React 19 + TypeScript web app for Fairline, built with Vite.
 
+## Design
+
+A "trading terminal" look: IBM Plex Sans for text and IBM Plex Mono for every number, hairline-bordered panels,
+one amber signal colour for the model, green/red only for edges. Light and dark palettes follow the system setting
+and are defined as CSS custom properties in `src/index.css`.
+
 ## Screens
 
 - **Calculator** (`/`): pick two teams to see the Poisson model's home/draw/away probabilities, a scoreline heatmap and Kalshi's normalized price. Expected goals can be edited to explore what-ifs.

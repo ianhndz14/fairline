@@ -26,8 +26,8 @@ describe('Calculator', () => {
 
     expect(await screen.findByText('36.0%')).toBeInTheDocument()
     expect(screen.getByText('27.4%')).toBeInTheDocument()
-    expect(screen.getByText('+8.6 pts edge')).toBeInTheDocument()
-    expect(screen.getByText('−6.9 pts edge')).toBeInTheDocument()
+    expect(screen.getByText('+8.6 pts')).toBeInTheDocument()
+    expect(screen.getByText('−6.9 pts')).toBeInTheDocument()
   })
 
   it('fills expected goals from the model and sends edited values to the API', async () => {
@@ -41,7 +41,7 @@ describe('Calculator', () => {
     await userEvent.type(homeLambda, '1')
 
     await waitFor(() => expect(requestedUrls(fetchMock)).toContainEqual(expect.stringContaining('homeLambda=1')))
-    expect(screen.getByRole('button', { name: 'Reset to model values' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Reset to model values' })).toBeEnabled()
   })
 
   it('explains when Kalshi has no market for the matchup', async () => {
@@ -49,7 +49,7 @@ describe('Calculator', () => {
     openCalculator('home=Fulham&away=Manchester+United')
 
     expect(await screen.findByText(/Kalshi has no open market/)).toBeInTheDocument()
-    expect(screen.queryByText(/pts edge/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/pts/)).not.toBeInTheDocument()
   })
 
   it('asks for two different teams instead of calling the API', async () => {
