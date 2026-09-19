@@ -1,5 +1,5 @@
 import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -7,5 +7,10 @@ export default defineConfig({
   server: {
     // Forward API calls to the Spring Boot backend, so the browser only ever talks to one origin.
     proxy: { '/api': 'http://localhost:8080' },
+  },
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.ts'],
+    unstubGlobals: true,
   },
 })
