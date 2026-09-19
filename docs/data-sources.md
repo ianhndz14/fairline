@@ -40,6 +40,6 @@ Keep a manual/CSV price upload path. It covers API changes or outages, lets us d
 
 Free Premier League CSVs for every season since 1993/94, updated during the season.
 
-- **URL pattern:** `https://www.football-data.co.uk/mmz4281/{season}/E0.csv`, where `{season}` is e.g. `2627` for 2026/27 and `E0` is the Premier League
+- **URL pattern:** `https://football-data.co.uk/mmz4281/{season}/E0.csv` (the `www.` address redirects here), where `{season}` is e.g. `2627` for 2026/27 and `E0` is the Premier League
 - **Columns we need:** `Date` (dd/MM/yyyy), `HomeTeam`, `AwayTeam`, `FTHG` (full-time home goals), `FTAG` (full-time away goals), `FTR` (H/D/A)
 - **Parsing notes:** the file starts with a UTF-8 BOM (an invisible marker at the very start of the file), so strip it before reading the first column name. Team names differ from Kalshi's (e.g. "Man United" vs "Manchester United"), so we'll need a small name-mapping table.

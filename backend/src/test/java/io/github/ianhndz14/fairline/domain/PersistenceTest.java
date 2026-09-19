@@ -17,11 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
  * Runs against the real PostgreSQL schema created by Flyway. Starting the context also
  * proves the entities match the migrations (ddl-auto=validate). Each test rolls back.
  */
-@SpringBootTest
+@SpringBootTest(properties = "fairline.scheduling.enabled=false")
 @Transactional
 class PersistenceTest {
 
-    private static final Instant KICKOFF = Instant.parse("2026-09-20T18:30:00Z");
+    private static final Instant KICKOFF = Instant.parse("2026-09-20T15:30:00Z");
 
     @Autowired
     EntityManager em;
