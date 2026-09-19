@@ -1,12 +1,23 @@
 # Fairline — Frontend
 
-React + TypeScript web app for Fairline.
+React 19 + TypeScript web app for Fairline, built with Vite.
 
-This folder will contain:
+## Run it
 
-- **Calculator** — enter a match's stats and see the model's estimated probabilities instantly.
-- **Opportunities dashboard** — +EV opportunities where the model disagrees with the market, sorted by edge size.
-- **History** — model probability vs. market price over time, charted with Recharts.
-- **Tests** — component tests with Jest and React Testing Library.
+Requires Node.js 20.19+ (tested on 24) and the [backend](../backend/README.md) running on port 8080.
 
-> Not scaffolded yet — see the [Roadmap](../README.md#roadmap).
+```bash
+npm install
+npm run dev      # http://localhost:5173
+```
+
+In development, Vite forwards every `/api/...` request to `http://localhost:8080`, so the browser only talks to one origin.
+
+## Scripts
+
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | Dev server with instant reload |
+| `npm run build` | Type-check with `tsc`, then build static files into `dist/` |
+| `npm run lint` | Lint with oxlint |
+| `npm run preview` | Serve the production build locally |
