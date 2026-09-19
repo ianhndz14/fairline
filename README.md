@@ -29,7 +29,8 @@ A full-stack probability modeling tool (Java/Spring Boot, React, PostgreSQL) tha
 ```
 fairline/
 ├── backend/    # Spring Boot API + Poisson probability engine
-└── frontend/   # React + TypeScript web app
+├── frontend/   # React + TypeScript web app
+└── docs/       # Design notes (data sources, wireframes)
 ```
 
 ## Roadmap
@@ -38,7 +39,7 @@ Phases are ordered because each builds on the previous one. Phase 5 is optional.
 
 ### Phase 0 — Planning & setup
 - [x] Pick one sport and market type for the MVP: Premier League, 1X2 match result
-- [ ] Review the Kalshi API docs; if access is insufficient, fall back to manual/CSV price upload
+- [x] Review the Kalshi API docs and define a fallback: public API confirmed, manual/CSV upload kept as plan B ([findings](docs/data-sources.md))
 - [ ] Wireframe 3 screens: calculator, opportunities dashboard, history
 - [x] Create the repository with an initial README and folder structure
 
