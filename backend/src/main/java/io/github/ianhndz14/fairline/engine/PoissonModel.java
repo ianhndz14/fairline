@@ -6,7 +6,8 @@ package io.github.ianhndz14.fairline.engine;
  */
 public final class PoissonModel {
 
-    // ponytail: scorelines above 10 are dropped and the grid renormalized; P(>10) < 1e-4 for lambda <= 4.
+    // Scorelines above 10 goals are dropped and the grid renormalized. For realistic
+    // soccer rates (lambda <= 4) the dropped mass is < 1e-4; raise this for high-scoring sports.
     public static final int MAX_GOALS = 10;
 
     public record Probabilities(double homeWin, double draw, double awayWin) {}
