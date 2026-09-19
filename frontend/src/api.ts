@@ -53,21 +53,25 @@ interface ApiState<T> {
  * the next request is in flight, and cancels requests that are no longer needed.
  */
 export function useApi<T>(path: string | null): ApiState<T> {
-  const [state, setState] = useState<ApiState<T>>({ loading: path !== null })
+  // Remembering which path a result belongs to lets loading be derived instead of stored.
+  const [result, setResult] = useState<{ path: string; data?: T; error?: string }>()
 
   useEffect(() => {
     if (path === null) return
     const controller = new AbortController()
-    setState((previous) => ({ data: previous.data, loading: true }))
     getJson<T>(path, controller.signal)
-      .then((data) => setState({ data, loading: false }))
+      .then((data) => setResult({ path, data }))
       .catch((error: Error) => {
-        if (!controller.signal.aborted) setState({ error: error.message, loading: false })
+        if (!controller.signal.aborted) setResult({ path, error: error.message })
       })
     return () => controller.abort()
   }, [path])
 
-  return state
+  return {
+    data: result?.data,
+    error: result?.path === path ? result.error : undefined,
+    loading: path !== null && result?.path !== path,
+  }
 }
 
 export const percent = (p: number) => `${(p * 100).toFixed(1)}%`
