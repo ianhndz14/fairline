@@ -44,9 +44,9 @@ Phases are ordered because each builds on the previous one. Phase 5 is optional.
 - [x] Create the repository with an initial README and folder structure
 
 ### Phase 1 — Probability engine (Poisson)
-- [ ] Implement the Poisson model in plain Java from each team's average goals/points
-- [ ] Normalize outcome probabilities so they sum to 1
-- [ ] Unit test with JUnit 5 against hand-calculated cases
+- [x] Implement the Poisson model in plain Java from each team's average goals/points
+- [x] Normalize outcome probabilities so they sum to 1
+- [x] Unit test with JUnit 5 against hand-calculated cases
 
 ### Phase 2 — Data model & persistence
 - [ ] Entities: `Event`, `Market`, `ModelEstimate`, `PriceSnapshot`, `EdgeLog`
