@@ -40,7 +40,7 @@ Phases are ordered because each builds on the previous one. Phase 5 is optional.
 ### Phase 0 — Planning & setup
 - [x] Pick one sport and market type for the MVP: Premier League, 1X2 match result
 - [x] Review the Kalshi API docs and define a fallback: public API confirmed, manual/CSV upload kept as plan B ([findings](docs/data-sources.md))
-- [ ] Wireframe 3 screens: calculator, opportunities dashboard, history
+- [x] Wireframe 3 screens: calculator, opportunities dashboard, history ([wireframes](docs/wireframes.md))
 - [x] Create the repository with an initial README and folder structure
 
 ### Phase 1 — Probability engine (Poisson)
