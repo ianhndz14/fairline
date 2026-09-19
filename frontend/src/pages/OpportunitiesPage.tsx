@@ -21,14 +21,19 @@ export default function OpportunitiesPage() {
       <div className="toolbar">
         <label>
           Minimum edge (pts)
-          <input type="number" step="0.5" inputMode="decimal"
+          <input
+            type="number"
+            step="0.5"
+            inputMode="decimal"
             value={minEdge ?? (data ? (data.minEdge * 100).toString() : '')}
-            onChange={(e) => setParams({ minEdge: e.target.value }, { replace: true })} />
+            onChange={(e) => setParams({ minEdge: e.target.value }, { replace: true })}
+          />
         </label>
         {data && (
           <span className="muted small">
             {data.lastPriceUpdate ? `Prices updated ${timeAgo(data.lastPriceUpdate)}` : 'No prices fetched yet'}
-            {' · '}{data.opportunities.length} {data.opportunities.length === 1 ? 'outcome' : 'outcomes'}
+            {' · '}
+            {data.opportunities.length} {data.opportunities.length === 1 ? 'outcome' : 'outcomes'}
           </span>
         )}
       </div>
@@ -48,16 +53,26 @@ export default function OpportunitiesPage() {
                 <th scope="col">Kickoff</th>
                 <th scope="col">Match</th>
                 <th scope="col">Outcome</th>
-                <th scope="col" className="num">Model</th>
-                <th scope="col" className="num">Market</th>
-                <th scope="col" className="num">Edge</th>
+                <th scope="col" className="num">
+                  Model
+                </th>
+                <th scope="col" className="num">
+                  Market
+                </th>
+                <th scope="col" className="num">
+                  Edge
+                </th>
               </tr>
             </thead>
             <tbody>
               {data.opportunities.map((o) => (
                 <tr key={`${o.eventId}-${o.outcome}`}>
                   <td className="nowrap">{formatKickoff(o.kickoff)}</td>
-                  <td><Link to={`/history/${o.eventId}?outcome=${o.outcome}`}>{o.homeTeam} v {o.awayTeam}</Link></td>
+                  <td>
+                    <Link to={`/history/${o.eventId}?outcome=${o.outcome}`}>
+                      {o.homeTeam} v {o.awayTeam}
+                    </Link>
+                  </td>
                   <td>{outcomeLabel(o.outcome, o.homeTeam, o.awayTeam)}</td>
                   <td className="num">{percent(o.model)}</td>
                   <td className="num">{percent(o.market)}</td>

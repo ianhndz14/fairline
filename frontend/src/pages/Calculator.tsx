@@ -43,32 +43,48 @@ export default function Calculator() {
   return (
     <>
       <h1>Match calculator</h1>
-      <p className="muted">Pick two teams to see the Poisson model's probabilities, next to Kalshi's price when the match is listed.</p>
+      <p className="muted">
+        Pick two teams to see the Poisson model's probabilities, next to Kalshi's price when the match is listed.
+      </p>
 
       <div className="controls">
         <label>
           Home team
           <select value={home} onChange={(e) => pickTeam('home', e.target.value)}>
-            {names.map((name) => <option key={name}>{name}</option>)}
+            {names.map((name) => (
+              <option key={name}>{name}</option>
+            ))}
           </select>
         </label>
         <label>
           Away team
           <select value={away} onChange={(e) => pickTeam('away', e.target.value)}>
-            {names.map((name) => <option key={name}>{name}</option>)}
+            {names.map((name) => (
+              <option key={name}>{name}</option>
+            ))}
           </select>
         </label>
         <label>
           Home expected goals (λ)
-          <input type="number" min="0" step="0.05" inputMode="decimal"
+          <input
+            type="number"
+            min="0"
+            step="0.05"
+            inputMode="decimal"
             value={lambdas.home ?? result?.homeLambda.toFixed(2) ?? ''}
-            onChange={(e) => setLambdas({ ...lambdas, home: e.target.value })} />
+            onChange={(e) => setLambdas({ ...lambdas, home: e.target.value })}
+          />
         </label>
         <label>
           Away expected goals (λ)
-          <input type="number" min="0" step="0.05" inputMode="decimal"
+          <input
+            type="number"
+            min="0"
+            step="0.05"
+            inputMode="decimal"
             value={lambdas.away ?? result?.awayLambda.toFixed(2) ?? ''}
-            onChange={(e) => setLambdas({ ...lambdas, away: e.target.value })} />
+            onChange={(e) => setLambdas({ ...lambdas, away: e.target.value })}
+          />
         </label>
       </div>
       <p className="muted small">
@@ -97,7 +113,9 @@ export default function Calculator() {
                   <div className="muted small">model</div>
                   {marketP !== undefined && edge !== undefined && (
                     <>
-                      <div className="market-line">{percent(marketP)} <span className="muted small">Kalshi (normalized)</span></div>
+                      <div className="market-line">
+                        {percent(marketP)} <span className="muted small">Kalshi (normalized)</span>
+                      </div>
                       <div className={edge >= 0 ? 'positive' : 'negative'}>{points(edge)} edge</div>
                     </>
                   )}
@@ -105,7 +123,9 @@ export default function Calculator() {
               )
             })}
           </div>
-          {!result.market && <p className="muted small">Kalshi has no open market for this matchup, so only the model is shown.</p>}
+          {!result.market && (
+            <p className="muted small">Kalshi has no open market for this matchup, so only the model is shown.</p>
+          )}
 
           <h2>Scoreline probabilities</h2>
           <ScoreHeatmap grid={result.scoreGrid} homeTeam={result.homeTeam} awayTeam={result.awayTeam} />
@@ -121,11 +141,17 @@ function ScoreHeatmap({ grid, homeTeam, awayTeam }: { grid: number[][]; homeTeam
   return (
     <div className="heatmap-wrap">
       <table className="heatmap">
-        <caption className="muted small">Rows: {homeTeam} goals · Columns: {awayTeam} goals</caption>
+        <caption className="muted small">
+          Rows: {homeTeam} goals · Columns: {awayTeam} goals
+        </caption>
         <thead>
           <tr>
             <th />
-            {range.map((a) => <th key={a} scope="col">{a}</th>)}
+            {range.map((a) => (
+              <th key={a} scope="col">
+                {a}
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
@@ -133,8 +159,11 @@ function ScoreHeatmap({ grid, homeTeam, awayTeam }: { grid: number[][]; homeTeam
             <tr key={h}>
               <th scope="row">{h}</th>
               {range.map((a) => (
-                <td key={a} title={`${h}–${a}: ${percent(grid[h][a])}`}
-                  style={{ '--strength': grid[h][a] / max } as CSSProperties}>
+                <td
+                  key={a}
+                  title={`${h}–${a}: ${percent(grid[h][a])}`}
+                  style={{ '--strength': grid[h][a] / max } as CSSProperties}
+                >
                   {percent(grid[h][a])}
                 </td>
               ))}

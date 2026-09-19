@@ -2,8 +2,15 @@ import { useState } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router'
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import {
-  formatKickoff, outcomeLabel, percent, points, useApi,
-  type EventSummary, type History, type Outcome, type TrackRecord,
+  formatKickoff,
+  outcomeLabel,
+  percent,
+  points,
+  useApi,
+  type EventSummary,
+  type History,
+  type Outcome,
+  type TrackRecord,
 } from '../api'
 
 const OUTCOMES: Outcome[] = ['HOME', 'DRAW', 'AWAY']
@@ -34,10 +41,14 @@ export default function HistoryPage() {
   return (
     <>
       <h1>History</h1>
-      <p className="muted">How the model and Kalshi's normalized price moved before kickoff, and how flagged outcomes turned out.</p>
+      <p className="muted">
+        How the model and Kalshi's normalized price moved before kickoff, and how flagged outcomes turned out.
+      </p>
 
       {events.error && <p className="error">{events.error}</p>}
-      {events.data && list.length === 0 && <p className="muted">No priced matches yet. Prices are fetched every 10 minutes.</p>}
+      {events.data && list.length === 0 && (
+        <p className="muted">No priced matches yet. Prices are fetched every 10 minutes.</p>
+      )}
 
       {list.length > 0 && (
         <div className="toolbar">
@@ -45,14 +56,20 @@ export default function HistoryPage() {
             Match
             <select value={selectedId} onChange={(e) => navigate(`/history/${e.target.value}?outcome=${outcome}`)}>
               {list.map((e) => (
-                <option key={e.id} value={e.id}>{matchName(e)} — {formatKickoff(e.kickoff)}</option>
+                <option key={e.id} value={e.id}>
+                  {matchName(e)} — {formatKickoff(e.kickoff)}
+                </option>
               ))}
             </select>
           </label>
           <div className="segmented" role="group" aria-label="Outcome">
             {OUTCOMES.map((o) => (
-              <button key={o} type="button" aria-pressed={o === outcome}
-                onClick={() => setParams({ outcome: o }, { replace: true })}>
+              <button
+                key={o}
+                type="button"
+                aria-pressed={o === outcome}
+                onClick={() => setParams({ outcome: o }, { replace: true })}
+              >
                 {h ? outcomeLabel(o, h.event.homeTeam, h.event.awayTeam) : o}
               </button>
             ))}
@@ -82,23 +99,46 @@ function PriceChart({ history, outcome }: { history: History; outcome: Outcome }
     market: p.market[outcome],
   }))
   return (
-    <div className="card chart" aria-label={`Model vs market for ${outcomeLabel(outcome, history.event.homeTeam, history.event.awayTeam)}`}>
+    <div
+      className="card chart"
+      aria-label={`Model vs market for ${outcomeLabel(outcome, history.event.homeTeam, history.event.awayTeam)}`}
+    >
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={data} margin={{ top: 8, right: 16, bottom: 0, left: 0 }}>
           <CartesianGrid stroke="var(--border)" vertical={false} />
-          <XAxis dataKey="time" type="number" scale="time" domain={['dataMin', 'dataMax']}
-            tickFormatter={(t: number) => chartTime.format(t)} stroke="var(--muted)" fontSize={12} minTickGap={40} />
-          <YAxis tickFormatter={(p: number) => `${Math.round(p * 100)}%`} stroke="var(--muted)" fontSize={12}
+          <XAxis
+            dataKey="time"
+            type="number"
+            scale="time"
+            domain={['dataMin', 'dataMax']}
+            tickFormatter={(t: number) => chartTime.format(t)}
+            stroke="var(--muted)"
+            fontSize={12}
+            minTickGap={40}
+          />
+          <YAxis
+            tickFormatter={(p: number) => `${Math.round(p * 100)}%`}
+            stroke="var(--muted)"
+            fontSize={12}
             domain={[(min: number) => Math.max(0, min - 0.03), (max: number) => Math.min(1, max + 0.03)]}
-            width={44} />
+            width={44}
+          />
           <Tooltip
             labelFormatter={(t) => chartTime.format(Number(t))}
             formatter={(value) => percent(Number(value))}
-            contentStyle={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 6 }} />
+            contentStyle={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 6 }}
+          />
           <Legend />
           <Line name="Model" dataKey="model" type="stepAfter" stroke="var(--accent)" strokeWidth={2.5} dot={false} />
-          <Line name="Kalshi (normalized)" dataKey="market" type="linear" stroke="var(--market)" strokeWidth={2}
-            strokeDasharray="5 4" dot={false} />
+          <Line
+            name="Kalshi (normalized)"
+            dataKey="market"
+            type="linear"
+            stroke="var(--market)"
+            strokeWidth={2}
+            strokeDasharray="5 4"
+            dot={false}
+          />
         </LineChart>
       </ResponsiveContainer>
     </div>
@@ -113,9 +153,7 @@ function TrackRecordSection() {
   return (
     <>
       <h2>Track record</h2>
-      <p className="muted small">
-        Each flagged outcome is judged once, by its last edge before kickoff.
-      </p>
+      <p className="muted small">Each flagged outcome is judged once, by its last edge before kickoff.</p>
       {data.hitRate !== null && data.averageMarket !== null && data.averageModel !== null ? (
         <p>
           Hit rate <strong>{percent(data.hitRate)}</strong> ({data.hits} of {data.settled}), against{' '}
@@ -136,23 +174,41 @@ function TrackRecordSection() {
                 <th scope="col">Kickoff</th>
                 <th scope="col">Match</th>
                 <th scope="col">Flagged</th>
-                <th scope="col" className="num">Edge</th>
-                <th scope="col" className="num">Result</th>
-                <th scope="col" className="num">Hit</th>
+                <th scope="col" className="num">
+                  Edge
+                </th>
+                <th scope="col" className="num">
+                  Result
+                </th>
+                <th scope="col" className="num">
+                  Hit
+                </th>
               </tr>
             </thead>
             <tbody>
               {data.edges.map((t) => (
                 <tr key={`${t.event.id}-${t.outcome}`}>
                   <td className="nowrap">{formatKickoff(t.event.kickoff)}</td>
-                  <td><Link to={`/history/${t.event.id}?outcome=${t.outcome}`}>{matchName(t.event)}</Link></td>
+                  <td>
+                    <Link to={`/history/${t.event.id}?outcome=${t.outcome}`}>{matchName(t.event)}</Link>
+                  </td>
                   <td>{outcomeLabel(t.outcome, t.event.homeTeam, t.event.awayTeam)}</td>
                   <td className="num">{points(t.edge)}</td>
-                  <td className="num">{t.event.homeGoals === null ? '–' : `${t.event.homeGoals}–${t.event.awayGoals}`}</td>
                   <td className="num">
-                    {t.hit === null ? <span className="muted">pending</span>
-                      : t.hit ? <span className="positive" aria-label="hit">✓</span>
-                      : <span className="negative" aria-label="miss">✗</span>}
+                    {t.event.homeGoals === null ? '–' : `${t.event.homeGoals}–${t.event.awayGoals}`}
+                  </td>
+                  <td className="num">
+                    {t.hit === null ? (
+                      <span className="muted">pending</span>
+                    ) : t.hit ? (
+                      <span className="positive" aria-label="hit">
+                        ✓
+                      </span>
+                    ) : (
+                      <span className="negative" aria-label="miss">
+                        ✗
+                      </span>
+                    )}
                   </td>
                 </tr>
               ))}

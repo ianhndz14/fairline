@@ -10,8 +10,14 @@ const opportunities: Opportunities = {
   minEdge: 0.03,
   opportunities: [
     {
-      eventId: 466, homeTeam: 'Fulham', awayTeam: 'Manchester United', kickoff: '2026-09-20T15:30:00Z',
-      outcome: 'HOME', model: 0.36, market: 0.274, edge: 0.086,
+      eventId: 466,
+      homeTeam: 'Fulham',
+      awayTeam: 'Manchester United',
+      kickoff: '2026-09-20T15:30:00Z',
+      outcome: 'HOME',
+      model: 0.36,
+      market: 0.274,
+      edge: 0.086,
     },
   ],
 }

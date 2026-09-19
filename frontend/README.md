@@ -21,9 +21,11 @@ In development, Vite forwards every `/api/...` request to `http://localhost:8080
 
 ## Scripts
 
-| Command | What it does |
-| --- | --- |
-| `npm run dev` | Dev server with instant reload |
-| `npm run build` | Type-check with `tsc`, then build static files into `dist/` |
-| `npm run lint` | Lint with oxlint |
-| `npm run preview` | Serve the production build locally |
+| Command           | What it does                                                |
+| ----------------- | ----------------------------------------------------------- |
+| `npm run dev`     | Dev server with instant reload                              |
+| `npm run build`   | Type-check with `tsc`, then build static files into `dist/` |
+| `npm run lint`    | Lint with oxlint                                            |
+| `npm run format`  | Format with Prettier (`format:check` only reports)          |
+| `npm test`        | Component tests with Vitest + React Testing Library         |
+| `npm run preview` | Serve the production build locally                          |

@@ -141,7 +141,11 @@ export const outcomeLabel = (outcome: Outcome, homeTeam: string, awayTeam: strin
   outcome === 'DRAW' ? 'Draw' : `${outcome === 'HOME' ? homeTeam : awayTeam} win`
 
 const kickoffFormat = new Intl.DateTimeFormat(undefined, {
-  weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit',
+  weekday: 'short',
+  day: 'numeric',
+  month: 'short',
+  hour: '2-digit',
+  minute: '2-digit',
 })
 
 /** Kickoff in the viewer's own timezone, e.g. "Sun 20 Sep, 11:30". */

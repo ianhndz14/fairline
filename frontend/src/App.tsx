@@ -10,9 +10,13 @@ export default function App() {
   return (
     <>
       <header className="site-header">
-        <Link to="/" className="brand">Fairline</Link>
+        <Link to="/" className="brand">
+          Fairline
+        </Link>
         <nav>
-          <NavLink to="/" end>Calculator</NavLink>
+          <NavLink to="/" end>
+            Calculator
+          </NavLink>
           <NavLink to="/opportunities">Opportunities</NavLink>
           <NavLink to="/history">History</NavLink>
         </nav>
