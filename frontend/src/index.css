@@ -214,6 +214,43 @@ table.data .num {
   white-space: nowrap;
 }
 
+/* History */
+
+.toolbar label.wide {
+  width: min(100%, 440px);
+}
+
+.segmented {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.segmented button {
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  border: none;
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.segmented button + button {
+  border-left: 1px solid var(--border);
+}
+
+.segmented button[aria-pressed='true'] {
+  background: var(--accent-soft);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.card.chart {
+  padding: 16px 8px 8px 0;
+}
+
 /* Calculator */
 
 .cards {

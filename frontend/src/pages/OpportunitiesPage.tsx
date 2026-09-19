@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router'
+import { Link, useSearchParams } from 'react-router'
 import { formatKickoff, outcomeLabel, percent, points, timeAgo, useApi, type Opportunities } from '../api'
 
 export default function OpportunitiesPage() {
@@ -56,7 +56,7 @@ export default function OpportunitiesPage() {
               {data.opportunities.map((o) => (
                 <tr key={`${o.eventId}-${o.outcome}`}>
                   <td className="nowrap">{formatKickoff(o.kickoff)}</td>
-                  <td>{o.homeTeam} v {o.awayTeam}</td>
+                  <td><Link to={`/history/${o.eventId}?outcome=${o.outcome}`}>{o.homeTeam} v {o.awayTeam}</Link></td>
                   <td>{outcomeLabel(o.outcome, o.homeTeam, o.awayTeam)}</td>
                   <td className="num">{percent(o.model)}</td>
                   <td className="num">{percent(o.market)}</td>

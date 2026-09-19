@@ -50,6 +50,46 @@ export interface Opportunities {
   opportunities: Opportunity[]
 }
 
+export interface EventSummary {
+  id: number
+  homeTeam: string
+  awayTeam: string
+  kickoff: string
+  homeGoals: number | null
+  awayGoals: number | null
+}
+
+export interface HistoryPoint {
+  time: string
+  model: Record<Outcome, number>
+  market: Record<Outcome, number>
+}
+
+export interface History {
+  event: EventSummary
+  points: HistoryPoint[]
+}
+
+export interface TrackedEdge {
+  event: EventSummary
+  outcome: Outcome
+  detectedAt: string
+  model: number
+  market: number
+  edge: number
+  /** null until the result is known. */
+  hit: boolean | null
+}
+
+export interface TrackRecord {
+  settled: number
+  hits: number
+  hitRate: number | null
+  averageModel: number | null
+  averageMarket: number | null
+  edges: TrackedEdge[]
+}
+
 /** GETs a backend endpoint, throwing the server's problem-detail message on failure. */
 export async function getJson<T>(path: string, signal?: AbortSignal): Promise<T> {
   const response = await fetch(path, { signal })
