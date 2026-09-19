@@ -26,16 +26,17 @@ class PersistenceTest {
     @Autowired
     EntityManager em;
 
-    private Event fulhamVsManUtd() {
-        Event event = new Event("Fulham", "Manchester United", KICKOFF, "KXEPLGAME-26SEP20FULMUN");
+    // Made-up teams and tickers so tests never collide with real matches in the dev database.
+    private Event testMatch() {
+        Event event = new Event("Home FC", "Away FC", KICKOFF, "TEST-HOMAWA");
         em.persist(event);
         return event;
     }
 
     @Test
     void persistsAFullMatchGraph() {
-        Event event = fulhamVsManUtd();
-        Market home = new Market(event, Outcome.HOME, "KXEPLGAME-26SEP20FULMUN-FUL");
+        Event event = testMatch();
+        Market home = new Market(event, Outcome.HOME, "TEST-HOMAWA-HOM");
         em.persist(home);
         em.persist(new PriceSnapshot(home, KICKOFF.minusSeconds(3600), new BigDecimal("0.2700"), new BigDecimal("0.2800")));
         ModelEstimate estimate = new ModelEstimate(event, KICKOFF.minusSeconds(3600), 1.2, 1.5,
@@ -48,7 +49,7 @@ class PersistenceTest {
 
         EdgeLog loaded = em.find(EdgeLog.class, edge.getId());
         assertEquals(Outcome.HOME, loaded.getMarket().getOutcome());
-        assertEquals("Fulham", loaded.getMarket().getEvent().getHomeTeam());
+        assertEquals("Home FC", loaded.getMarket().getEvent().getHomeTeam());
         assertEquals(KICKOFF, loaded.getMarket().getEvent().getKickoff());
         assertEquals(loaded.getModelProb() - 0.275, loaded.getEdge(), 1e-12);
     }
@@ -63,20 +64,20 @@ class PersistenceTest {
 
     @Test
     void rejectsSecondMarketForSameOutcome() {
-        Event event = fulhamVsManUtd();
+        Event event = testMatch();
         em.persist(new Market(event, Outcome.DRAW, null));
         assertRejected(new Market(event, Outcome.DRAW, null));
     }
 
     @Test
     void rejectsBidAboveAsk() {
-        Market market = new Market(fulhamVsManUtd(), Outcome.AWAY, null);
+        Market market = new Market(testMatch(), Outcome.AWAY, null);
         em.persist(market);
         assertRejected(new PriceSnapshot(market, KICKOFF, new BigDecimal("0.50"), new BigDecimal("0.40")));
     }
 
     @Test
     void rejectsTeamPlayingItself() {
-        assertRejected(new Event("Fulham", "Fulham", KICKOFF, null));
+        assertRejected(new Event("Home FC", "Home FC", KICKOFF, null));
     }
 }

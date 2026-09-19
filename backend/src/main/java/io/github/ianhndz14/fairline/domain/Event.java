@@ -30,6 +30,10 @@ public class Event {
         this.kalshiEventTicker = kalshiEventTicker;
     }
 
+    public void linkKalshi(String kalshiEventTicker) {
+        this.kalshiEventTicker = kalshiEventTicker;
+    }
+
     public void recordResult(int homeGoals, int awayGoals) {
         this.homeGoals = homeGoals;
         this.awayGoals = awayGoals;

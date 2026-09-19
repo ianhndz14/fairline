@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 
+    Optional<Event> findByKalshiEventTicker(String kalshiEventTicker);
+
     Optional<Event> findFirstByHomeTeamAndAwayTeamAndKickoffBetween(String homeTeam, String awayTeam,
                                                                     Instant from, Instant to);
 
