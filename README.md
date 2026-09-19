@@ -54,9 +54,9 @@ Phases are ordered because each builds on the previous one. Phase 5 is optional.
 - [x] Versioned schema migrations with Flyway
 
 ### Phase 3 — REST API & market data
-- [ ] Endpoints: load an event with stats, get the model estimate, list detected opportunities
-- [ ] Price ingestion (Kalshi API, or manual upload as fallback) stored as timestamped snapshots
-- [ ] Comparison logic: record an opportunity when model vs. market exceeds a configurable threshold
+- [x] Endpoints: load an event with stats, get the model estimate, list detected opportunities
+- [x] Price ingestion (Kalshi API, or manual upload as fallback) stored as timestamped snapshots
+- [x] Comparison logic: record an opportunity when model vs. market exceeds a configurable threshold
 
 ### Phase 4 — React frontend
 - [ ] Interactive calculator: enter match stats → instant estimated probabilities

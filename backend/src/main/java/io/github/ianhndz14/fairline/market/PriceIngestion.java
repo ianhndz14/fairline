@@ -9,6 +9,7 @@ import io.github.ianhndz14.fairline.domain.PriceSnapshot;
 import io.github.ianhndz14.fairline.domain.PriceSnapshotRepository;
 import io.github.ianhndz14.fairline.market.KalshiClient.KalshiEvent;
 import io.github.ianhndz14.fairline.market.KalshiClient.KalshiMarket;
+import io.github.ianhndz14.fairline.stats.TeamStats;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -53,8 +54,8 @@ public class PriceIngestion {
         try {
             int flagged = priced.stream().mapToInt(e -> edgeDetector.evaluate(e, now).size()).sum();
             log.info("Flagged {} opportunities at threshold {}", flagged, edgeDetector.threshold());
-        } catch (IllegalStateException e) {
-            log.warn("Skipping edge detection: {}", e.getMessage()); // no match results imported yet
+        } catch (TeamStats.NoResultsException e) {
+            log.warn("Skipping edge detection: {}", e.getMessage());
         }
     }
 

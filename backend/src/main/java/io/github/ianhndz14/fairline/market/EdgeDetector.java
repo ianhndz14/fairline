@@ -76,17 +76,22 @@ public class EdgeDetector {
 
     /** Model vs market for all three outcomes; empty until every outcome has a price. */
     public List<Edge> edges(Event event, ModelEstimate estimate) {
-        Map<Outcome, PriceSnapshot> latest = new EnumMap<>(Outcome.class);
-        for (Market market : markets.findByEvent(event)) {
-            snapshots.findFirstByMarketOrderByCapturedAtDesc(market).ifPresent(s -> latest.put(market.getOutcome(), s));
-        }
-        Map<Outcome, Double> market = normalizedMidPrices(latest);
+        Map<Outcome, Double> market = marketProbabilities(event);
         if (market.size() < Outcome.values().length) {
             return List.of();
         }
         return Arrays.stream(Outcome.values())
                 .map(o -> new Edge(event, o, estimate.probabilityOf(o), market.get(o)))
                 .toList();
+    }
+
+    /** Normalized market probabilities from each outcome's latest snapshot. */
+    public Map<Outcome, Double> marketProbabilities(Event event) {
+        Map<Outcome, PriceSnapshot> latest = new EnumMap<>(Outcome.class);
+        for (Market market : markets.findByEvent(event)) {
+            snapshots.findFirstByMarketOrderByCapturedAtDesc(market).ifPresent(s -> latest.put(market.getOutcome(), s));
+        }
+        return normalizedMidPrices(latest);
     }
 
     /**

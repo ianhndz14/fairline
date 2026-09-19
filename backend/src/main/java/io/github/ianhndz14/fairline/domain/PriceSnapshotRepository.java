@@ -8,5 +8,7 @@ public interface PriceSnapshotRepository extends JpaRepository<PriceSnapshot, Lo
 
     Optional<PriceSnapshot> findFirstByMarketOrderByCapturedAtDesc(Market market);
 
+    Optional<PriceSnapshot> findFirstByOrderByCapturedAtDesc();
+
     List<PriceSnapshot> findByMarketOrderByCapturedAt(Market market);
 }

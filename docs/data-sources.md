@@ -12,6 +12,7 @@ Kalshi's market data endpoints are **public: no account or API key needed** to r
   - **Event** = one match, e.g. `KXEPLGAME-26SEP20FULMUN` (Fulham vs Manchester United, Sep 20 2026)
   - **Markets** = three binary (yes/no) contracts per event, one per 1X2 outcome:
     `...-FUL` (home win), `...-TIE` (draw), `...-MUN` (away win)
+- **Kickoff:** `occurrence_datetime` is **kickoff + 3 hours** (checked against football-data's recorded kickoff for Arsenal vs Coventry, Aug 21 2026). Event titles are always `"Home vs Away"`.
 - **Resolution:** result after 90 minutes plus stoppage time (no extra time or penalties), which matches what the Poisson model predicts.
 
 ### Endpoints

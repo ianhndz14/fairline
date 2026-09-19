@@ -20,13 +20,23 @@ public class TeamStats {
     /** Each team's record is blended with this many league-average matches, so 2-3 early games don't dominate. */
     static final double PRIOR_MATCHES = 5;
 
-    /** Teams without a match in this long (e.g. relegated last season) are left out of the team list. */
-    static final Duration ACTIVE = Duration.ofDays(120);
+    /**
+     * Teams without a match in this long are left out of the team list. It covers the ~12-week summer break,
+     * so relegated teams linger for about a week each August before dropping off.
+     */
+    static final Duration ACTIVE = Duration.ofDays(90);
 
     public record TeamStrength(String team, int matches, Instant lastMatch, double homeScored,
                                double homeConceded, double awayScored, double awayConceded) {}
 
     public record ExpectedGoals(double home, double away) {}
+
+    /** No results have been imported yet (e.g. first startup), so there is nothing to model from. */
+    public static class NoResultsException extends IllegalStateException {
+        NoResultsException() {
+            super("No match results imported yet");
+        }
+    }
 
     record League(double homeAvg, double awayAvg, Map<String, TeamStrength> teams) {
 
@@ -64,7 +74,7 @@ public class TeamStats {
 
     static League compute(List<Event> played) {
         if (played.isEmpty()) {
-            throw new IllegalStateException("No match results imported yet");
+            throw new NoResultsException();
         }
         double homeAvg = played.stream().mapToInt(Event::getHomeGoals).average().orElseThrow();
         double awayAvg = played.stream().mapToInt(Event::getAwayGoals).average().orElseThrow();
