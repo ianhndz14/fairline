@@ -80,6 +80,63 @@ class FairlineControllerTest {
     }
 
     @Test
+    void teamsIncludeRatesForEveryActiveTeam() throws Exception {
+        mvc.perform(get("/api/teams"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[?(@.team == 'Test United')].matches").value(Matchers.contains(1)))
+                .andExpect(jsonPath("$[0].homeScored").isNumber());
+    }
+
+    @Test
+    void opportunitiesDefaultToConfiguredThreshold() throws Exception {
+        mvc.perform(get("/api/opportunities"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.minEdge").value(0.03))
+                .andExpect(jsonPath("$.opportunities").isArray());
+    }
+
+    @Test
+    void pricedMatchHasHistoryAndAppearsInEventList() throws Exception {
+        long id = createTestMatch();
+        mvc.perform(post("/api/events/{id}/prices", id).contentType(MediaType.APPLICATION_JSON).content(PRICES))
+                .andExpect(status().isOk());
+
+        mvc.perform(get("/api/events"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[?(@.id == %d)].homeTeam".formatted(id)).value(Matchers.contains("Home FC")));
+
+        mvc.perform(get("/api/events/{id}/history", id))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.event.awayTeam").value("Away FC"))
+                .andExpect(jsonPath("$.points.length()").value(1))
+                .andExpect(jsonPath("$.points[0].market.HOME").isNumber())
+                .andExpect(jsonPath("$.points[0].model.HOME").isNumber());
+    }
+
+    @Test
+    void trackRecordReportsSummaryAndEdges() throws Exception {
+        mvc.perform(get("/api/track-record"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.settled").isNumber())
+                .andExpect(jsonPath("$.hits").isNumber())
+                .andExpect(jsonPath("$.edges").isArray());
+    }
+
+    @Test
+    void rejectsMalformedRequests() throws Exception {
+        mvc.perform(post("/api/events").contentType(MediaType.APPLICATION_JSON).content("{not json"))
+                .andExpect(status().isBadRequest());
+        mvc.perform(post("/api/events").contentType(MediaType.APPLICATION_JSON).content("""
+                        {"homeTeam": "Home FC", "awayTeam": "Away FC"}""")) // no kickoff
+                .andExpect(status().isBadRequest());
+        mvc.perform(post("/api/events/{id}/prices", createTestMatch()).contentType(MediaType.APPLICATION_JSON)
+                        .content(PRICES.replace("\"DRAW\"", "\"TIE\""))) // not an outcome
+                .andExpect(status().isBadRequest());
+        mvc.perform(get("/api/events/{id}/history", Long.MAX_VALUE))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     void rejectsInvalidInput() throws Exception {
         mvc.perform(post("/api/events").contentType(MediaType.APPLICATION_JSON).content("""
                         {"homeTeam": "Home FC", "awayTeam": "home fc", "kickoff": "2026-10-01T14:00:00Z"}"""))
