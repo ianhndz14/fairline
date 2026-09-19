@@ -38,9 +38,10 @@ class PersistenceTest {
         Event event = testMatch();
         Market home = new Market(event, Outcome.HOME, "TEST-HOMAWA-HOM");
         em.persist(home);
-        em.persist(new PriceSnapshot(home, KICKOFF.minusSeconds(3600), new BigDecimal("0.2700"), new BigDecimal("0.2800")));
-        ModelEstimate estimate = new ModelEstimate(event, KICKOFF.minusSeconds(3600), 1.2, 1.5,
-                PoissonModel.matchProbabilities(1.2, 1.5));
+        em.persist(new PriceSnapshot(
+                home, KICKOFF.minusSeconds(3600), new BigDecimal("0.2700"), new BigDecimal("0.2800")));
+        ModelEstimate estimate = new ModelEstimate(
+                event, KICKOFF.minusSeconds(3600), 1.2, 1.5, PoissonModel.matchProbabilities(1.2, 1.5));
         em.persist(estimate);
         EdgeLog edge = new EdgeLog(home, estimate, KICKOFF.minusSeconds(3600), 0.275);
         em.persist(edge);

@@ -39,9 +39,13 @@ public class EdgeDetector {
     private final EdgeLogRepository edgeLogs;
     private final double threshold;
 
-    public EdgeDetector(TeamStats stats, ModelEstimateRepository estimates, MarketRepository markets,
-                        PriceSnapshotRepository snapshots, EdgeLogRepository edgeLogs,
-                        @Value("${fairline.edge.threshold}") double threshold) {
+    public EdgeDetector(
+            TeamStats stats,
+            ModelEstimateRepository estimates,
+            MarketRepository markets,
+            PriceSnapshotRepository snapshots,
+            EdgeLogRepository edgeLogs,
+            @Value("${fairline.edge.threshold}") double threshold) {
         this.stats = stats;
         this.estimates = estimates;
         this.markets = markets;
@@ -57,7 +61,9 @@ public class EdgeDetector {
     /** Refreshes the event's model estimate, then logs and returns every outcome at or above the threshold. */
     public List<Edge> evaluate(Event event, Instant now) {
         ModelEstimate estimate = refreshEstimate(event, now);
-        List<Edge> flagged = edges(event, estimate).stream().filter(e -> e.edge() >= threshold).toList();
+        List<Edge> flagged = edges(event, estimate).stream()
+                .filter(e -> e.edge() >= threshold)
+                .toList();
         for (Edge e : flagged) {
             Market market = markets.findByEventAndOutcome(event, e.outcome()).orElseThrow();
             edgeLogs.save(new EdgeLog(market, estimate, now, e.market()));
@@ -68,10 +74,11 @@ public class EdgeDetector {
     /** Saves a new estimate only when the expected goals changed (i.e. new results came in). */
     ModelEstimate refreshEstimate(Event event, Instant now) {
         ExpectedGoals xg = stats.expectedGoals(event.getHomeTeam(), event.getAwayTeam());
-        return estimates.findFirstByEventOrderByCreatedAtDesc(event)
+        return estimates
+                .findFirstByEventOrderByCreatedAtDesc(event)
                 .filter(latest -> latest.getHomeLambda() == xg.home() && latest.getAwayLambda() == xg.away())
-                .orElseGet(() -> estimates.save(new ModelEstimate(event, now, xg.home(), xg.away(),
-                        PoissonModel.matchProbabilities(xg.home(), xg.away()))));
+                .orElseGet(() -> estimates.save(new ModelEstimate(
+                        event, now, xg.home(), xg.away(), PoissonModel.matchProbabilities(xg.home(), xg.away()))));
     }
 
     /** Model vs market for all three outcomes; empty until every outcome has a price. */

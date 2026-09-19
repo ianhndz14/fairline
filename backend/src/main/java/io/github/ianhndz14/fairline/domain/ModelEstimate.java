@@ -29,8 +29,8 @@ public class ModelEstimate {
 
     protected ModelEstimate() {}
 
-    public ModelEstimate(Event event, Instant createdAt, double homeLambda, double awayLambda,
-                         PoissonModel.Probabilities p) {
+    public ModelEstimate(
+            Event event, Instant createdAt, double homeLambda, double awayLambda, PoissonModel.Probabilities p) {
         this.event = event;
         this.createdAt = createdAt;
         this.homeLambda = homeLambda;
@@ -48,9 +48,23 @@ public class ModelEstimate {
         };
     }
 
-    public Long getId() { return id; }
-    public Event getEvent() { return event; }
-    public Instant getCreatedAt() { return createdAt; }
-    public double getHomeLambda() { return homeLambda; }
-    public double getAwayLambda() { return awayLambda; }
+    public Long getId() {
+        return id;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public double getHomeLambda() {
+        return homeLambda;
+    }
+
+    public double getAwayLambda() {
+        return awayLambda;
+    }
 }

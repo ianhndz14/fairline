@@ -31,8 +31,12 @@ class FairlineControllerTest {
              "DRAW": {"bid": 0.49, "ask": 0.50},
              "AWAY": {"bid": 0.49, "ask": 0.50}}""";
 
-    @Autowired WebApplicationContext context;
-    @Autowired EventRepository events;
+    @Autowired
+    WebApplicationContext context;
+
+    @Autowired
+    EventRepository events;
+
     MockMvc mvc;
 
     @BeforeEach
@@ -45,12 +49,15 @@ class FairlineControllerTest {
     }
 
     private long createTestMatch() throws Exception {
-        String body = mvc.perform(post("/api/events").contentType(MediaType.APPLICATION_JSON).content("""
-                        {"homeTeam": "Home FC", "awayTeam": "Away FC", "kickoff": "%s"}"""
-                        .formatted(Instant.now().plus(Duration.ofDays(2)))))
+        String body = mvc.perform(post("/api/events")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                        {"homeTeam": "Home FC", "awayTeam": "Away FC", "kickoff": "%s"}""".formatted(Instant.now().plus(Duration.ofDays(2)))))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.probabilities.homeWin").isNumber())
-                .andReturn().getResponse().getContentAsString();
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
         return Long.parseLong(body.replaceAll(".*\"id\":(\\d+).*", "$1"));
     }
 
@@ -58,7 +65,9 @@ class FairlineControllerTest {
     void manualEventAndPricesShowUpAsOpportunity() throws Exception {
         long id = createTestMatch();
 
-        mvc.perform(post("/api/events/{id}/prices", id).contentType(MediaType.APPLICATION_JSON).content(PRICES))
+        mvc.perform(post("/api/events/{id}/prices", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(PRICES))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].outcome").value("HOME"));
 
@@ -71,8 +80,11 @@ class FairlineControllerTest {
     @Test
     void estimateAcceptsLambdaOverrides() throws Exception {
         // lambda = 1 each: draw = 0.308508, as in PoissonModelTest.
-        mvc.perform(get("/api/estimate").param("home", "Home FC").param("away", "Away FC")
-                        .param("homeLambda", "1").param("awayLambda", "1"))
+        mvc.perform(get("/api/estimate")
+                        .param("home", "Home FC")
+                        .param("away", "Away FC")
+                        .param("homeLambda", "1")
+                        .param("awayLambda", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.probabilities.draw")
                         .value(Matchers.closeTo(new BigDecimal("0.308508"), new BigDecimal("0.000001"))))
@@ -98,7 +110,9 @@ class FairlineControllerTest {
     @Test
     void pricedMatchHasHistoryAndAppearsInEventList() throws Exception {
         long id = createTestMatch();
-        mvc.perform(post("/api/events/{id}/prices", id).contentType(MediaType.APPLICATION_JSON).content(PRICES))
+        mvc.perform(post("/api/events/{id}/prices", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(PRICES))
                 .andExpect(status().isOk());
 
         mvc.perform(get("/api/events"))
@@ -129,11 +143,11 @@ class FairlineControllerTest {
         mvc.perform(post("/api/events").contentType(MediaType.APPLICATION_JSON).content("""
                         {"homeTeam": "Home FC", "awayTeam": "Away FC"}""")) // no kickoff
                 .andExpect(status().isBadRequest());
-        mvc.perform(post("/api/events/{id}/prices", createTestMatch()).contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(post("/api/events/{id}/prices", createTestMatch())
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(PRICES.replace("\"DRAW\"", "\"TIE\""))) // not an outcome
                 .andExpect(status().isBadRequest());
-        mvc.perform(get("/api/events/{id}/history", Long.MAX_VALUE))
-                .andExpect(status().isNotFound());
+        mvc.perform(get("/api/events/{id}/history", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -143,14 +157,17 @@ class FairlineControllerTest {
                 .andExpect(status().isBadRequest());
 
         long id = createTestMatch();
-        mvc.perform(post("/api/events/{id}/prices", id).contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(post("/api/events/{id}/prices", id)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(PRICES.replace("\"bid\": 0.01", "\"bid\": 0.90"))) // bid above ask
                 .andExpect(status().isBadRequest());
-        mvc.perform(post("/api/events/{id}/prices", id).contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(post("/api/events/{id}/prices", id)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(PRICES.replace("\"ask\": 0.02", "\"ask\": 1.50"))) // not a probability
                 .andExpect(status().isBadRequest());
 
-        mvc.perform(post("/api/events/{id}/prices", Long.MAX_VALUE).contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(post("/api/events/{id}/prices", Long.MAX_VALUE)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(PRICES))
                 .andExpect(status().isNotFound());
     }

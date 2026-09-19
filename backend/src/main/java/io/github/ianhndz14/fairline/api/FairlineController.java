@@ -38,8 +38,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class FairlineController {
 
-    public record NewEvent(@NotBlank @Size(max = 64) String homeTeam, @NotBlank @Size(max = 64) String awayTeam,
-                           @NotNull Instant kickoff) {}
+    public record NewEvent(
+            @NotBlank @Size(max = 64) String homeTeam,
+            @NotBlank @Size(max = 64) String awayTeam,
+            @NotNull Instant kickoff) {}
 
     /** {@code lastPriceUpdate} lets the dashboard show how fresh the market data is. */
     public record Opportunities(Instant lastPriceUpdate, double minEdge, List<Opportunity> opportunities) {}
@@ -49,8 +51,8 @@ public class FairlineController {
     private final EdgeDetector edgeDetector;
     private final HistoryService history;
 
-    public FairlineController(MatchService matches, TeamStats stats, EdgeDetector edgeDetector,
-                              HistoryService history) {
+    public FairlineController(
+            MatchService matches, TeamStats stats, EdgeDetector edgeDetector, HistoryService history) {
         this.matches = matches;
         this.stats = stats;
         this.edgeDetector = edgeDetector;
@@ -63,17 +65,19 @@ public class FairlineController {
     }
 
     @GetMapping("/estimate")
-    public Estimate estimate(@RequestParam String home, @RequestParam String away,
-                             @RequestParam(required = false) Double homeLambda,
-                             @RequestParam(required = false) Double awayLambda) {
+    public Estimate estimate(
+            @RequestParam String home,
+            @RequestParam String away,
+            @RequestParam(required = false) Double homeLambda,
+            @RequestParam(required = false) Double awayLambda) {
         return matches.estimate(home, away, homeLambda, awayLambda);
     }
 
     @GetMapping("/opportunities")
     public Opportunities opportunities(@RequestParam(required = false) Double minEdge) {
         double threshold = minEdge != null ? minEdge : edgeDetector.threshold();
-        return new Opportunities(matches.lastPriceUpdate().orElse(null), threshold,
-                matches.opportunities(threshold, Instant.now()));
+        return new Opportunities(
+                matches.lastPriceUpdate().orElse(null), threshold, matches.opportunities(threshold, Instant.now()));
     }
 
     @GetMapping("/events")
@@ -114,7 +118,8 @@ public class FairlineController {
 
     @ExceptionHandler
     ProblemDetail conflict(DataIntegrityViolationException e) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, "Conflicts with existing data (e.g. duplicate match)");
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.CONFLICT, "Conflicts with existing data (e.g. duplicate match)");
     }
 
     @ExceptionHandler

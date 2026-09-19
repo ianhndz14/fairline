@@ -21,8 +21,8 @@ public class KalshiClient {
             @JsonProperty("occurrence_datetime") Instant occurrence) {}
 
     /** One match. Kalshi titles are "Home vs Away". */
-    public record KalshiEvent(@JsonProperty("event_ticker") String eventTicker, String title,
-                              List<KalshiMarket> markets) {}
+    public record KalshiEvent(
+            @JsonProperty("event_ticker") String eventTicker, String title, List<KalshiMarket> markets) {}
 
     record EventsPage(List<KalshiEvent> events, String cursor) {}
 
@@ -38,7 +38,8 @@ public class KalshiClient {
         String cursor = "";
         do {
             EventsPage page = http.get()
-                    .uri("/events?series_ticker=KXEPLGAME&status=open&with_nested_markets=true&limit=200&cursor={cursor}",
+                    .uri(
+                            "/events?series_ticker=KXEPLGAME&status=open&with_nested_markets=true&limit=200&cursor={cursor}",
                             cursor)
                     .retrieve()
                     .body(EventsPage.class);

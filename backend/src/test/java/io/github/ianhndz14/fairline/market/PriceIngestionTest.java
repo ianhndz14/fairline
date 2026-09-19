@@ -29,10 +29,17 @@ class PriceIngestionTest {
     private static final Instant KICKOFF = OCCURRENCE.minus(Duration.ofHours(3));
     private static final Instant BEFORE_KICKOFF = KICKOFF.minus(Duration.ofHours(2));
 
-    @Autowired PriceIngestion ingestion;
-    @Autowired EventRepository events;
-    @Autowired MarketRepository markets;
-    @Autowired PriceSnapshotRepository snapshots;
+    @Autowired
+    PriceIngestion ingestion;
+
+    @Autowired
+    EventRepository events;
+
+    @Autowired
+    MarketRepository markets;
+
+    @Autowired
+    PriceSnapshotRepository snapshots;
 
     private static KalshiMarket market(String suffix, String name, String bid, String ask) {
         return new KalshiMarket("TEST-HOMAWA-" + suffix, name, new BigDecimal(bid), new BigDecimal(ask), OCCURRENCE);

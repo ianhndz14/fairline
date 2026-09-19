@@ -36,8 +36,12 @@ public class PriceIngestion {
     private final PriceSnapshotRepository snapshots;
     private final EdgeDetector edgeDetector;
 
-    public PriceIngestion(KalshiClient kalshi, EventRepository events, MarketRepository markets,
-                          PriceSnapshotRepository snapshots, EdgeDetector edgeDetector) {
+    public PriceIngestion(
+            KalshiClient kalshi,
+            EventRepository events,
+            MarketRepository markets,
+            PriceSnapshotRepository snapshots,
+            EdgeDetector edgeDetector) {
         this.kalshi = kalshi;
         this.events = events;
         this.markets = markets;
@@ -52,7 +56,9 @@ public class PriceIngestion {
         Instant now = Instant.now();
         List<Event> priced = ingest(kalshi.openEplGames(), now);
         try {
-            int flagged = priced.stream().mapToInt(e -> edgeDetector.evaluate(e, now).size()).sum();
+            int flagged = priced.stream()
+                    .mapToInt(e -> edgeDetector.evaluate(e, now).size())
+                    .sum();
             log.info("Flagged {} opportunities at threshold {}", flagged, edgeDetector.threshold());
         } catch (TeamStats.NoResultsException e) {
             log.warn("Skipping edge detection: {}", e.getMessage());
@@ -64,7 +70,9 @@ public class PriceIngestion {
         List<Event> priced = new ArrayList<>();
         for (KalshiEvent k : open) {
             String[] teams = k.title() == null ? new String[0] : k.title().split(" vs ");
-            if (teams.length != 2 || k.markets() == null || k.markets().isEmpty()
+            if (teams.length != 2
+                    || k.markets() == null
+                    || k.markets().isEmpty()
                     || k.markets().get(0).occurrence() == null) {
                 log.warn("Skipping unexpected Kalshi event {} ({})", k.eventTicker(), k.title());
                 continue;
@@ -94,9 +102,12 @@ public class PriceIngestion {
 
     private Event findOrCreate(KalshiEvent k, String homeTeam, String awayTeam, Instant kickoff) {
         return events.findByKalshiEventTicker(k.eventTicker())
-                .or(() -> events.findFirstByHomeTeamAndAwayTeamAndKickoffBetween(homeTeam, awayTeam,
-                                kickoff.minus(1, ChronoUnit.DAYS), kickoff.plus(1, ChronoUnit.DAYS))
-                        .map(manual -> { manual.linkKalshi(k.eventTicker()); return manual; }))
+                .or(() -> events.findFirstByHomeTeamAndAwayTeamAndKickoffBetween(
+                                homeTeam, awayTeam, kickoff.minus(1, ChronoUnit.DAYS), kickoff.plus(1, ChronoUnit.DAYS))
+                        .map(manual -> {
+                            manual.linkKalshi(k.eventTicker());
+                            return manual;
+                        }))
                 .orElseGet(() -> events.save(new Event(homeTeam, awayTeam, kickoff, k.eventTicker())));
     }
 

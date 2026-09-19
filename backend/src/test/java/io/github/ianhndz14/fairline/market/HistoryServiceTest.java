@@ -29,10 +29,17 @@ class HistoryServiceTest {
     private static final Instant FIRST_RUN = KICKOFF.minus(Duration.ofHours(3));
     private static final Instant SECOND_RUN = FIRST_RUN.plus(Duration.ofMinutes(10));
 
-    @Autowired HistoryService history;
-    @Autowired PriceIngestion ingestion;
-    @Autowired EdgeDetector detector;
-    @Autowired EventRepository events;
+    @Autowired
+    HistoryService history;
+
+    @Autowired
+    PriceIngestion ingestion;
+
+    @Autowired
+    EdgeDetector detector;
+
+    @Autowired
+    EventRepository events;
 
     private Event match;
 
@@ -50,10 +57,29 @@ class HistoryServiceTest {
 
     private void capture(Instant at, String homeBid, String homeAsk) {
         Instant occurrence = KICKOFF.plus(PriceIngestion.KALSHI_TIME_OFFSET);
-        List<Event> priced = ingestion.ingest(List.of(new KalshiEvent("TEST-HOMAWA", "Home FC vs Away FC", List.of(
-                new KalshiMarket("TEST-HOMAWA-HOM", "Home FC", new BigDecimal(homeBid), new BigDecimal(homeAsk), occurrence),
-                new KalshiMarket("TEST-HOMAWA-TIE", "Tie", new BigDecimal("0.45"), new BigDecimal("0.46"), occurrence),
-                new KalshiMarket("TEST-HOMAWA-AWA", "Away FC", new BigDecimal("0.45"), new BigDecimal("0.46"), occurrence)))),
+        List<Event> priced = ingestion.ingest(
+                List.of(new KalshiEvent(
+                        "TEST-HOMAWA",
+                        "Home FC vs Away FC",
+                        List.of(
+                                new KalshiMarket(
+                                        "TEST-HOMAWA-HOM",
+                                        "Home FC",
+                                        new BigDecimal(homeBid),
+                                        new BigDecimal(homeAsk),
+                                        occurrence),
+                                new KalshiMarket(
+                                        "TEST-HOMAWA-TIE",
+                                        "Tie",
+                                        new BigDecimal("0.45"),
+                                        new BigDecimal("0.46"),
+                                        occurrence),
+                                new KalshiMarket(
+                                        "TEST-HOMAWA-AWA",
+                                        "Away FC",
+                                        new BigDecimal("0.45"),
+                                        new BigDecimal("0.46"),
+                                        occurrence)))),
                 at);
         priced.forEach(event -> detector.evaluate(event, at));
     }

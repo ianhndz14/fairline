@@ -33,8 +33,19 @@ public class Market {
         this.kalshiTicker = kalshiTicker;
     }
 
-    public Long getId() { return id; }
-    public Event getEvent() { return event; }
-    public Outcome getOutcome() { return outcome; }
-    public String getKalshiTicker() { return kalshiTicker; }
+    public Long getId() {
+        return id;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public Outcome getOutcome() {
+        return outcome;
+    }
+
+    public String getKalshiTicker() {
+        return kalshiTicker;
+    }
 }

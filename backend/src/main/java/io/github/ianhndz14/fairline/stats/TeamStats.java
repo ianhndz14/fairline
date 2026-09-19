@@ -3,6 +3,7 @@ package io.github.ianhndz14.fairline.stats;
 import io.github.ianhndz14.fairline.domain.Event;
 import io.github.ianhndz14.fairline.domain.EventRepository;
 import io.github.ianhndz14.fairline.engine.PoissonModel;
+import java.io.Serial;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
@@ -26,13 +27,22 @@ public class TeamStats {
      */
     static final Duration ACTIVE = Duration.ofDays(90);
 
-    public record TeamStrength(String team, int matches, Instant lastMatch, double homeScored,
-                               double homeConceded, double awayScored, double awayConceded) {}
+    public record TeamStrength(
+            String team,
+            int matches,
+            Instant lastMatch,
+            double homeScored,
+            double homeConceded,
+            double awayScored,
+            double awayConceded) {}
 
     public record ExpectedGoals(double home, double away) {}
 
     /** No results have been imported yet (e.g. first startup), so there is nothing to model from. */
     public static class NoResultsException extends IllegalStateException {
+        @Serial
+        private static final long serialVersionUID = 1L;
+
         NoResultsException() {
             super("No match results imported yet");
         }
@@ -61,7 +71,9 @@ public class TeamStats {
 
     public List<TeamStrength> activeTeams() {
         Instant cutoff = Instant.now().minus(ACTIVE);
-        return league().teams().values().stream().filter(t -> t.lastMatch().isAfter(cutoff)).toList();
+        return league().teams().values().stream()
+                .filter(t -> t.lastMatch().isAfter(cutoff))
+                .toList();
     }
 
     public ExpectedGoals expectedGoals(String homeTeam, String awayTeam) {
@@ -69,7 +81,8 @@ public class TeamStats {
     }
 
     private League league() {
-        return compute(events.findByHomeGoalsNotNullAndKickoffAfter(Instant.now().minus(WINDOW)));
+        return compute(
+                events.findByHomeGoalsNotNullAndKickoffAfter(Instant.now().minus(WINDOW)));
     }
 
     static League compute(List<Event> played) {
@@ -81,13 +94,22 @@ public class TeamStats {
 
         Map<String, Tally> tallies = new HashMap<>();
         for (Event e : played) {
-            tallies.computeIfAbsent(e.getHomeTeam(), k -> new Tally()).home(e.getHomeGoals(), e.getAwayGoals(), e.getKickoff());
-            tallies.computeIfAbsent(e.getAwayTeam(), k -> new Tally()).away(e.getAwayGoals(), e.getHomeGoals(), e.getKickoff());
+            tallies.computeIfAbsent(e.getHomeTeam(), k -> new Tally())
+                    .home(e.getHomeGoals(), e.getAwayGoals(), e.getKickoff());
+            tallies.computeIfAbsent(e.getAwayTeam(), k -> new Tally())
+                    .away(e.getAwayGoals(), e.getHomeGoals(), e.getKickoff());
         }
         Map<String, TeamStrength> teams = new TreeMap<>(); // sorted by team name
-        tallies.forEach((name, t) -> teams.put(name, new TeamStrength(name, t.homeGames + t.awayGames, t.lastMatch,
-                shrink(t.homeFor, t.homeGames, homeAvg), shrink(t.homeAgainst, t.homeGames, awayAvg),
-                shrink(t.awayFor, t.awayGames, awayAvg), shrink(t.awayAgainst, t.awayGames, homeAvg))));
+        tallies.forEach((name, t) -> teams.put(
+                name,
+                new TeamStrength(
+                        name,
+                        t.homeGames + t.awayGames,
+                        t.lastMatch,
+                        shrink(t.homeFor, t.homeGames, homeAvg),
+                        shrink(t.homeAgainst, t.homeGames, awayAvg),
+                        shrink(t.awayFor, t.awayGames, awayAvg),
+                        shrink(t.awayAgainst, t.awayGames, homeAvg))));
         return new League(homeAvg, awayAvg, teams);
     }
 
@@ -100,11 +122,17 @@ public class TeamStats {
         Instant lastMatch = Instant.MIN;
 
         void home(int scored, int conceded, Instant kickoff) {
-            homeGames++; homeFor += scored; homeAgainst += conceded; seen(kickoff);
+            homeGames++;
+            homeFor += scored;
+            homeAgainst += conceded;
+            seen(kickoff);
         }
 
         void away(int scored, int conceded, Instant kickoff) {
-            awayGames++; awayFor += scored; awayAgainst += conceded; seen(kickoff);
+            awayGames++;
+            awayFor += scored;
+            awayAgainst += conceded;
+            seen(kickoff);
         }
 
         private void seen(Instant kickoff) {

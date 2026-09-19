@@ -46,11 +46,31 @@ public class Event {
         return diff > 0 ? Outcome.HOME : diff == 0 ? Outcome.DRAW : Outcome.AWAY;
     }
 
-    public Long getId() { return id; }
-    public String getKalshiEventTicker() { return kalshiEventTicker; }
-    public String getHomeTeam() { return homeTeam; }
-    public String getAwayTeam() { return awayTeam; }
-    public Instant getKickoff() { return kickoff; }
-    public Integer getHomeGoals() { return homeGoals; }
-    public Integer getAwayGoals() { return awayGoals; }
+    public Long getId() {
+        return id;
+    }
+
+    public String getKalshiEventTicker() {
+        return kalshiEventTicker;
+    }
+
+    public String getHomeTeam() {
+        return homeTeam;
+    }
+
+    public String getAwayTeam() {
+        return awayTeam;
+    }
+
+    public Instant getKickoff() {
+        return kickoff;
+    }
+
+    public Integer getHomeGoals() {
+        return homeGoals;
+    }
+
+    public Integer getAwayGoals() {
+        return awayGoals;
+    }
 }

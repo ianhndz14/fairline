@@ -22,8 +22,8 @@ class ResultsImporterTest {
     void parsesPlayedMatchesOnly() {
         List<MatchResult> results = ResultsImporter.parse(CSV);
         assertEquals(2, results.size());
-        assertEquals(new MatchResult("Arsenal", "Coventry", Instant.parse("2026-08-21T19:00:00Z"), 3, 0),
-                results.get(0));
+        assertEquals(
+                new MatchResult("Arsenal", "Coventry", Instant.parse("2026-08-21T19:00:00Z"), 3, 0), results.get(0));
     }
 
     @Test

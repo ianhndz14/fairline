@@ -32,6 +32,11 @@ Requires Java 21 and PostgreSQL. The Maven Wrapper downloads Maven on first run.
 
 The API is then at `http://localhost:8080`. Data appears within about 30 seconds of startup.
 
+## Code quality
+
+- `./mvnw verify` compiles with every `javac` warning treated as an error, runs all tests, and checks formatting.
+- `./mvnw spotless:apply` formats the code ([Palantir Java Format](https://github.com/palantir/palantir-java-format) via Spotless).
+
 ## API
 
 | Method | Path | Description |

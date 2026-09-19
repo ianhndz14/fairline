@@ -39,11 +39,31 @@ public class EdgeLog {
         this.edge = modelProb - marketProb;
     }
 
-    public Long getId() { return id; }
-    public Market getMarket() { return market; }
-    public ModelEstimate getModelEstimate() { return modelEstimate; }
-    public Instant getDetectedAt() { return detectedAt; }
-    public double getModelProb() { return modelProb; }
-    public double getMarketProb() { return marketProb; }
-    public double getEdge() { return edge; }
+    public Long getId() {
+        return id;
+    }
+
+    public Market getMarket() {
+        return market;
+    }
+
+    public ModelEstimate getModelEstimate() {
+        return modelEstimate;
+    }
+
+    public Instant getDetectedAt() {
+        return detectedAt;
+    }
+
+    public double getModelProb() {
+        return modelProb;
+    }
+
+    public double getMarketProb() {
+        return marketProb;
+    }
+
+    public double getEdge() {
+        return edge;
+    }
 }

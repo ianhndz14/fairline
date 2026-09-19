@@ -33,9 +33,23 @@ public class PriceSnapshot {
         this.yesAsk = yesAsk;
     }
 
-    public Long getId() { return id; }
-    public Market getMarket() { return market; }
-    public Instant getCapturedAt() { return capturedAt; }
-    public BigDecimal getYesBid() { return yesBid; }
-    public BigDecimal getYesAsk() { return yesAsk; }
+    public Long getId() {
+        return id;
+    }
+
+    public Market getMarket() {
+        return market;
+    }
+
+    public Instant getCapturedAt() {
+        return capturedAt;
+    }
+
+    public BigDecimal getYesBid() {
+        return yesBid;
+    }
+
+    public BigDecimal getYesAsk() {
+        return yesAsk;
+    }
 }

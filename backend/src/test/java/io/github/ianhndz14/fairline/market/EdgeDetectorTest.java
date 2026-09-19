@@ -27,10 +27,17 @@ class EdgeDetectorTest {
 
     private static final Instant NOW = Instant.now();
 
-    @Autowired EdgeDetector detector;
-    @Autowired PriceIngestion ingestion;
-    @Autowired EventRepository events;
-    @Autowired EdgeLogRepository edgeLogs;
+    @Autowired
+    EdgeDetector detector;
+
+    @Autowired
+    PriceIngestion ingestion;
+
+    @Autowired
+    EventRepository events;
+
+    @Autowired
+    EdgeLogRepository edgeLogs;
 
     private static PriceSnapshot price(String bid, String ask) {
         return new PriceSnapshot(null, NOW, new BigDecimal(bid), new BigDecimal(ask));
@@ -58,10 +65,29 @@ class EdgeDetectorTest {
         // The market prices the home side at ~1.5%, far below any sensible model estimate,
         // and the draw and away sides above it, so only HOME should clear the 5-point threshold.
         Instant occurrence = NOW.plus(Duration.ofDays(2));
-        ingestion.ingest(List.of(new KalshiEvent("TEST-HOMAWA", "Home FC vs Away FC", List.of(
-                new KalshiMarket("TEST-HOMAWA-HOM", "Home FC", new BigDecimal("0.01"), new BigDecimal("0.02"), occurrence),
-                new KalshiMarket("TEST-HOMAWA-TIE", "Tie", new BigDecimal("0.49"), new BigDecimal("0.50"), occurrence),
-                new KalshiMarket("TEST-HOMAWA-AWA", "Away FC", new BigDecimal("0.49"), new BigDecimal("0.50"), occurrence)))),
+        ingestion.ingest(
+                List.of(new KalshiEvent(
+                        "TEST-HOMAWA",
+                        "Home FC vs Away FC",
+                        List.of(
+                                new KalshiMarket(
+                                        "TEST-HOMAWA-HOM",
+                                        "Home FC",
+                                        new BigDecimal("0.01"),
+                                        new BigDecimal("0.02"),
+                                        occurrence),
+                                new KalshiMarket(
+                                        "TEST-HOMAWA-TIE",
+                                        "Tie",
+                                        new BigDecimal("0.49"),
+                                        new BigDecimal("0.50"),
+                                        occurrence),
+                                new KalshiMarket(
+                                        "TEST-HOMAWA-AWA",
+                                        "Away FC",
+                                        new BigDecimal("0.49"),
+                                        new BigDecimal("0.50"),
+                                        occurrence)))),
                 NOW);
         Event event = events.findByKalshiEventTicker("TEST-HOMAWA").orElseThrow();
 

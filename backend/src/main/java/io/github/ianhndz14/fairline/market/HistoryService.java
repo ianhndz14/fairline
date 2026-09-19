@@ -29,11 +29,11 @@ public class HistoryService {
 
     static final Duration RECENT = Duration.ofDays(30);
 
-    public record EventSummary(long id, String homeTeam, String awayTeam, Instant kickoff,
-                               Integer homeGoals, Integer awayGoals) {
+    public record EventSummary(
+            long id, String homeTeam, String awayTeam, Instant kickoff, Integer homeGoals, Integer awayGoals) {
         static EventSummary of(Event e) {
-            return new EventSummary(e.getId(), e.getHomeTeam(), e.getAwayTeam(), e.getKickoff(),
-                    e.getHomeGoals(), e.getAwayGoals());
+            return new EventSummary(
+                    e.getId(), e.getHomeTeam(), e.getAwayTeam(), e.getKickoff(), e.getHomeGoals(), e.getAwayGoals());
         }
     }
 
@@ -43,20 +43,34 @@ public class HistoryService {
     public record History(EventSummary event, List<HistoryPoint> points) {}
 
     /** {@code hit} is null until the match result is known. */
-    public record TrackedEdge(EventSummary event, Outcome outcome, Instant detectedAt, double model, double market,
-                              double edge, Boolean hit) {}
+    public record TrackedEdge(
+            EventSummary event,
+            Outcome outcome,
+            Instant detectedAt,
+            double model,
+            double market,
+            double edge,
+            Boolean hit) {}
 
     /** Averages are over settled edges; comparing hitRate with averageMarket shows whether the edges were real. */
-    public record TrackRecord(int settled, int hits, Double hitRate, Double averageModel, Double averageMarket,
-                              List<TrackedEdge> edges) {}
+    public record TrackRecord(
+            int settled,
+            int hits,
+            Double hitRate,
+            Double averageModel,
+            Double averageMarket,
+            List<TrackedEdge> edges) {}
 
     private final EventRepository events;
     private final PriceSnapshotRepository snapshots;
     private final ModelEstimateRepository estimates;
     private final EdgeLogRepository edgeLogs;
 
-    public HistoryService(EventRepository events, PriceSnapshotRepository snapshots,
-                          ModelEstimateRepository estimates, EdgeLogRepository edgeLogs) {
+    public HistoryService(
+            EventRepository events,
+            PriceSnapshotRepository snapshots,
+            ModelEstimateRepository estimates,
+            EdgeLogRepository edgeLogs) {
         this.events = events;
         this.snapshots = snapshots;
         this.estimates = estimates;
@@ -66,7 +80,9 @@ public class HistoryService {
     /** Matches with market prices, from the last 30 days onwards. */
     @Transactional(readOnly = true)
     public List<EventSummary> pricedEvents(Instant now) {
-        return events.findPricedSince(now.minus(RECENT)).stream().map(EventSummary::of).toList();
+        return events.findPricedSince(now.minus(RECENT)).stream()
+                .map(EventSummary::of)
+                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -101,28 +117,42 @@ public class HistoryService {
         Map<Long, EdgeLog> closing = new HashMap<>(); // keyed by market = one (match, outcome)
         for (EdgeLog log : edgeLogs.findForMatchesBefore(now)) {
             if (log.getDetectedAt().isBefore(log.getMarket().getEvent().getKickoff())) {
-                closing.merge(log.getMarket().getId(), log,
+                closing.merge(
+                        log.getMarket().getId(),
+                        log,
                         (a, b) -> a.getDetectedAt().isAfter(b.getDetectedAt()) ? a : b);
             }
         }
 
         List<TrackedEdge> tracked = closing.values().stream()
                 .map(HistoryService::track)
-                .sorted(Comparator.comparing((TrackedEdge t) -> t.event().kickoff()).reversed())
+                .sorted(Comparator.comparing((TrackedEdge t) -> t.event().kickoff())
+                        .reversed())
                 .toList();
-        List<TrackedEdge> settled = tracked.stream().filter(t -> t.hit() != null).toList();
+        List<TrackedEdge> settled =
+                tracked.stream().filter(t -> t.hit() != null).toList();
         int hits = (int) settled.stream().filter(TrackedEdge::hit).count();
-        return new TrackRecord(settled.size(), hits,
+        return new TrackRecord(
+                settled.size(),
+                hits,
                 settled.isEmpty() ? null : (double) hits / settled.size(),
-                average(settled, TrackedEdge::model), average(settled, TrackedEdge::market), tracked);
+                average(settled, TrackedEdge::model),
+                average(settled, TrackedEdge::market),
+                tracked);
     }
 
     private static TrackedEdge track(EdgeLog log) {
         Event event = log.getMarket().getEvent();
         Outcome outcome = log.getMarket().getOutcome();
         Boolean hit = event.result() == null ? null : event.result() == outcome;
-        return new TrackedEdge(EventSummary.of(event), outcome, log.getDetectedAt(), log.getModelProb(),
-                log.getMarketProb(), log.getEdge(), hit);
+        return new TrackedEdge(
+                EventSummary.of(event),
+                outcome,
+                log.getDetectedAt(),
+                log.getModelProb(),
+                log.getMarketProb(),
+                log.getEdge(),
+                hit);
     }
 
     /** The latest estimate made at or before {@code time}; the first one if all are later. */
@@ -142,6 +172,8 @@ public class HistoryService {
     }
 
     private static Double average(List<TrackedEdge> edges, ToDoubleFunction<TrackedEdge> value) {
-        return edges.isEmpty() ? null : edges.stream().mapToDouble(value).average().orElseThrow();
+        return edges.isEmpty()
+                ? null
+                : edges.stream().mapToDouble(value).average().orElseThrow();
     }
 }

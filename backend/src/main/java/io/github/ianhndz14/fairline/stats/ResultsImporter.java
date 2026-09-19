@@ -59,7 +59,10 @@ public class ResultsImporter {
         for (int start : List.of(currentStart - 1, currentStart)) {
             String season = "%02d%02d".formatted(start % 100, (start + 1) % 100);
             try {
-                String csv = http.get().uri("/mmz4281/{season}/E0.csv", season).retrieve().body(String.class);
+                String csv = http.get()
+                        .uri("/mmz4281/{season}/E0.csv", season)
+                        .retrieve()
+                        .body(String.class);
                 if (csv == null) { // e.g. the site moved and answered with a redirect
                     log.warn("Empty response for season {} results", season);
                     continue;
@@ -76,8 +79,11 @@ public class ResultsImporter {
         int changed = 0;
         for (MatchResult r : results) {
             // Match by teams within a day, since a Kalshi-created event may have a slightly different time.
-            Optional<Event> existing = events.findFirstByHomeTeamAndAwayTeamAndKickoffBetween(r.homeTeam(),
-                    r.awayTeam(), r.kickoff().minus(1, ChronoUnit.DAYS), r.kickoff().plus(1, ChronoUnit.DAYS));
+            Optional<Event> existing = events.findFirstByHomeTeamAndAwayTeamAndKickoffBetween(
+                    r.homeTeam(),
+                    r.awayTeam(),
+                    r.kickoff().minus(1, ChronoUnit.DAYS),
+                    r.kickoff().plus(1, ChronoUnit.DAYS));
             if (existing.isEmpty()) {
                 Event event = new Event(r.homeTeam(), r.awayTeam(), r.kickoff(), null);
                 event.recordResult(r.homeGoals(), r.awayGoals());
@@ -95,20 +101,29 @@ public class ResultsImporter {
     static List<MatchResult> parse(String csv) {
         List<String> lines = csv.lines().filter(line -> !line.isBlank()).toList();
         // The file starts with a byte-order mark, which would otherwise stick to the first column name.
-        List<String> header = List.of(lines.get(0).replaceFirst("^[^A-Za-z]+", "").split(","));
+        List<String> header =
+                List.of(lines.get(0).replaceFirst("^[^A-Za-z]+", "").split(","));
         int date = header.indexOf("Date"), time = header.indexOf("Time");
         int home = header.indexOf("HomeTeam"), away = header.indexOf("AwayTeam");
         int homeGoals = header.indexOf("FTHG"), awayGoals = header.indexOf("FTAG");
-        int lastNeeded = IntStream.of(date, home, away, homeGoals, awayGoals).max().orElseThrow();
+        int lastNeeded =
+                IntStream.of(date, home, away, homeGoals, awayGoals).max().orElseThrow();
 
         List<MatchResult> results = new ArrayList<>();
         for (String line : lines.subList(1, lines.size())) {
             String[] f = line.split(",", -1);
             if (f.length <= lastNeeded || f[homeGoals].isBlank()) continue;
             LocalTime kickoffTime = time >= 0 && !f[time].isBlank() ? LocalTime.parse(f[time]) : LocalTime.of(15, 0);
-            Instant kickoff = LocalDate.parse(f[date], DATE).atTime(kickoffTime).atZone(UK).toInstant();
-            results.add(new MatchResult(canonical(f[home]), canonical(f[away]), kickoff,
-                    Integer.parseInt(f[homeGoals]), Integer.parseInt(f[awayGoals])));
+            Instant kickoff = LocalDate.parse(f[date], DATE)
+                    .atTime(kickoffTime)
+                    .atZone(UK)
+                    .toInstant();
+            results.add(new MatchResult(
+                    canonical(f[home]),
+                    canonical(f[away]),
+                    kickoff,
+                    Integer.parseInt(f[homeGoals]),
+                    Integer.parseInt(f[awayGoals])));
         }
         return results;
     }

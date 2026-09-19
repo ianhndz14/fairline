@@ -32,18 +32,38 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class MatchService {
 
-    public record Opportunity(long eventId, String homeTeam, String awayTeam, Instant kickoff, Outcome outcome,
-                              double model, double market, double edge) {}
+    public record Opportunity(
+            long eventId,
+            String homeTeam,
+            String awayTeam,
+            Instant kickoff,
+            Outcome outcome,
+            double model,
+            double market,
+            double edge) {}
 
     /** {@code market} is null when there's no priced upcoming match between the two teams. */
-    public record Estimate(String homeTeam, String awayTeam, double homeLambda, double awayLambda,
-                           Probabilities probabilities, double[][] scoreGrid, Map<Outcome, Double> market) {}
+    public record Estimate(
+            String homeTeam,
+            String awayTeam,
+            double homeLambda,
+            double awayLambda,
+            Probabilities probabilities,
+            double[][] scoreGrid,
+            Map<Outcome, Double> market) {}
 
-    public record CreatedEvent(long id, String homeTeam, String awayTeam, Instant kickoff, double homeLambda,
-                               double awayLambda, Probabilities probabilities) {}
+    public record CreatedEvent(
+            long id,
+            String homeTeam,
+            String awayTeam,
+            Instant kickoff,
+            double homeLambda,
+            double awayLambda,
+            Probabilities probabilities) {}
 
-    public record Price(@NotNull @DecimalMin("0") @DecimalMax("1") BigDecimal bid,
-                        @NotNull @DecimalMin("0") @DecimalMax("1") BigDecimal ask) {}
+    public record Price(
+            @NotNull @DecimalMin("0") @DecimalMax("1") BigDecimal bid,
+            @NotNull @DecimalMin("0") @DecimalMax("1") BigDecimal ask) {}
 
     private final TeamStats stats;
     private final EdgeDetector edgeDetector;
@@ -52,9 +72,13 @@ public class MatchService {
     private final PriceSnapshotRepository snapshots;
     private final ModelEstimateRepository estimates;
 
-    public MatchService(TeamStats stats, EdgeDetector edgeDetector, EventRepository events,
-                        MarketRepository markets, PriceSnapshotRepository snapshots,
-                        ModelEstimateRepository estimates) {
+    public MatchService(
+            TeamStats stats,
+            EdgeDetector edgeDetector,
+            EventRepository events,
+            MarketRepository markets,
+            PriceSnapshotRepository snapshots,
+            ModelEstimateRepository estimates) {
         this.stats = stats;
         this.edgeDetector = edgeDetector;
         this.events = events;
@@ -71,13 +95,19 @@ public class MatchService {
                 : stats.expectedGoals(homeTeam, awayTeam);
         double home = homeLambda != null ? homeLambda : xg.home();
         double away = awayLambda != null ? awayLambda : xg.away();
-        Map<Outcome, Double> market = events
-                .findFirstByHomeTeamAndAwayTeamAndKickoffAfterOrderByKickoff(homeTeam, awayTeam, Instant.now())
+        Map<Outcome, Double> market = events.findFirstByHomeTeamAndAwayTeamAndKickoffAfterOrderByKickoff(
+                        homeTeam, awayTeam, Instant.now())
                 .map(edgeDetector::marketProbabilities)
                 .filter(m -> m.size() == Outcome.values().length)
                 .orElse(null);
-        return new Estimate(homeTeam, awayTeam, home, away, PoissonModel.matchProbabilities(home, away),
-                PoissonModel.scoreGrid(home, away), market);
+        return new Estimate(
+                homeTeam,
+                awayTeam,
+                home,
+                away,
+                PoissonModel.matchProbabilities(home, away),
+                PoissonModel.scoreGrid(home, away),
+                market);
     }
 
     /** Upcoming outcomes where the latest model estimate beats the market by at least minEdge, biggest first. */
@@ -85,8 +115,9 @@ public class MatchService {
     public List<Opportunity> opportunities(double minEdge, Instant now) {
         List<Opportunity> result = new ArrayList<>();
         for (Event event : events.findByKickoffAfterOrderByKickoff(now)) {
-            estimates.findFirstByEventOrderByCreatedAtDesc(event).ifPresent(estimate ->
-                    edgeDetector.edges(event, estimate).stream()
+            estimates
+                    .findFirstByEventOrderByCreatedAtDesc(event)
+                    .ifPresent(estimate -> edgeDetector.edges(event, estimate).stream()
                             .filter(e -> e.edge() >= minEdge)
                             .forEach(e -> result.add(toOpportunity(e))));
         }
@@ -107,9 +138,17 @@ public class MatchService {
         }
         Event event = events.save(new Event(homeTeam, awayTeam, kickoff, null));
         ModelEstimate estimate = edgeDetector.refreshEstimate(event, Instant.now());
-        return new CreatedEvent(event.getId(), homeTeam, awayTeam, kickoff, estimate.getHomeLambda(),
-                estimate.getAwayLambda(), new Probabilities(estimate.probabilityOf(Outcome.HOME),
-                estimate.probabilityOf(Outcome.DRAW), estimate.probabilityOf(Outcome.AWAY)));
+        return new CreatedEvent(
+                event.getId(),
+                homeTeam,
+                awayTeam,
+                kickoff,
+                estimate.getHomeLambda(),
+                estimate.getAwayLambda(),
+                new Probabilities(
+                        estimate.probabilityOf(Outcome.HOME),
+                        estimate.probabilityOf(Outcome.DRAW),
+                        estimate.probabilityOf(Outcome.AWAY)));
     }
 
     /** Plan B: enter all three prices by hand; returns any opportunities they create. */
@@ -129,12 +168,21 @@ public class MatchService {
                     .orElseGet(() -> markets.save(new Market(event, outcome, null)));
             snapshots.save(new PriceSnapshot(market, now, p.bid(), p.ask()));
         });
-        return edgeDetector.evaluate(event, now).stream().map(MatchService::toOpportunity).toList();
+        return edgeDetector.evaluate(event, now).stream()
+                .map(MatchService::toOpportunity)
+                .toList();
     }
 
     private static Opportunity toOpportunity(Edge e) {
         Event event = e.event();
-        return new Opportunity(event.getId(), event.getHomeTeam(), event.getAwayTeam(), event.getKickoff(),
-                e.outcome(), e.model(), e.market(), e.edge());
+        return new Opportunity(
+                event.getId(),
+                event.getHomeTeam(),
+                event.getAwayTeam(),
+                event.getKickoff(),
+                e.outcome(),
+                e.model(),
+                e.market(),
+                e.edge());
     }
 }
