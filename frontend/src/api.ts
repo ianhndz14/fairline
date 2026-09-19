@@ -32,6 +32,24 @@ export interface Estimate {
   market: Record<Outcome, number> | null
 }
 
+export interface Opportunity {
+  eventId: number
+  homeTeam: string
+  awayTeam: string
+  kickoff: string
+  outcome: Outcome
+  model: number
+  market: number
+  edge: number
+}
+
+export interface Opportunities {
+  /** When prices were last fetched from Kalshi; null before the first fetch. */
+  lastPriceUpdate: string | null
+  minEdge: number
+  opportunities: Opportunity[]
+}
+
 /** GETs a backend endpoint, throwing the server's problem-detail message on failure. */
 export async function getJson<T>(path: string, signal?: AbortSignal): Promise<T> {
   const response = await fetch(path, { signal })
@@ -78,3 +96,23 @@ export const percent = (p: number) => `${(p * 100).toFixed(1)}%`
 
 /** An edge in percentage points, e.g. +4.3 pts. */
 export const points = (edge: number) => `${edge >= 0 ? '+' : '−'}${Math.abs(edge * 100).toFixed(1)} pts`
+
+export const outcomeLabel = (outcome: Outcome, homeTeam: string, awayTeam: string) =>
+  outcome === 'DRAW' ? 'Draw' : `${outcome === 'HOME' ? homeTeam : awayTeam} win`
+
+const kickoffFormat = new Intl.DateTimeFormat(undefined, {
+  weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit',
+})
+
+/** Kickoff in the viewer's own timezone, e.g. "Sun 20 Sep, 11:30". */
+export const formatKickoff = (iso: string) => kickoffFormat.format(new Date(iso))
+
+const relativeFormat = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' })
+
+/** "5 minutes ago", "2 hours ago". */
+export function timeAgo(iso: string) {
+  const minutes = Math.round((Date.parse(iso) - Date.now()) / 60_000)
+  return Math.abs(minutes) < 60
+    ? relativeFormat.format(minutes, 'minute')
+    : relativeFormat.format(Math.round(minutes / 60), 'hour')
+}

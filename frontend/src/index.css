@@ -160,6 +160,60 @@ a:focus-visible {
   outline-offset: 2px;
 }
 
+/* Tables */
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px 24px;
+  margin: 20px 0 12px;
+}
+
+.toolbar label {
+  width: 180px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+table.data th,
+table.data td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+table.data tbody tr:last-child td {
+  border-bottom: none;
+}
+
+table.data th {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+table.data .num {
+  text-align: right;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
 /* Calculator */
 
 .cards {
