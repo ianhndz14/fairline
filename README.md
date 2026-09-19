@@ -21,7 +21,8 @@ A full-stack probability modeling tool (Java/Spring Boot, React, PostgreSQL) tha
 | Backend  | Java 21, Spring Boot 4, Spring Data JPA, Flyway        |
 | Database | PostgreSQL                                          |
 | Frontend | React 19, TypeScript, Vite, React Router, Recharts  |
-| Testing  | JUnit 5, Spring Boot Test / MockMvc, Jest, React Testing Library |
+| Testing  | JUnit 5, Spring Boot Test / MockMvc, Vitest, React Testing Library |
+| Quality  | javac lint (warnings as errors), Spotless + Palantir Java Format, oxlint, Prettier |
 | DevOps   | Docker, GitHub Actions                              |
 
 ## Project structure
@@ -75,9 +76,9 @@ Phases are ordered because each builds on the previous one. Phase 5 is optional.
 - [ ] Per-user watchlists and saved preferences
 
 ### Phase 6 — Testing & quality
-- [ ] API tests for critical endpoints (Spring Boot Test / MockMvc)
-- [ ] Component tests for key frontend views (Jest + React Testing Library)
-- [ ] Consistent linting and formatting across backend and frontend
+- [x] API tests for critical endpoints (Spring Boot Test / MockMvc)
+- [x] Component tests for key frontend views (Vitest + React Testing Library)
+- [x] Consistent linting and formatting across backend and frontend
 
 ### Phase 7 — CI/CD & deployment
 - [ ] GitHub Actions running all tests on every push
