@@ -18,7 +18,7 @@ A full-stack probability modeling tool (Java/Spring Boot, React, PostgreSQL) tha
 
 | Layer    | Technologies                                        |
 | -------- | --------------------------------------------------- |
-| Backend  | Java 17, Spring Boot, Spring Data JPA, Flyway        |
+| Backend  | Java 21, Spring Boot 4, Spring Data JPA, Flyway        |
 | Database | PostgreSQL                                          |
 | Frontend | React, TypeScript, Recharts                         |
 | Testing  | JUnit 5, Spring Boot Test / MockMvc, Jest, React Testing Library |
