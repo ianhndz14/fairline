@@ -2,9 +2,21 @@
 
 Java 21 + Spring Boot 4 service that powers Fairline.
 
+## Local database
+
+Requires PostgreSQL (tested on 18). Create the app's user and database once, as the `postgres` superuser:
+
+```sql
+CREATE ROLE fairline LOGIN;
+\password fairline
+CREATE DATABASE fairline OWNER fairline;
+```
+
+Then copy `.env.example` to `.env` and set `DB_PASSWORD`. `.env` is git-ignored. Flyway creates the tables from `src/main/resources/db/migration` on startup.
+
 ## Run the tests
 
-Only Java 21 is required. The Maven Wrapper downloads Maven on first run.
+Requires Java 21 and the database above. The Maven Wrapper downloads Maven on first run.
 
 ```bash
 ./mvnw test        # macOS / Linux / Git Bash
