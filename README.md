@@ -20,7 +20,7 @@ A full-stack probability modeling tool (Java/Spring Boot, React, PostgreSQL) tha
 | -------- | --------------------------------------------------- |
 | Backend  | Java 21, Spring Boot 4, Spring Data JPA, Flyway        |
 | Database | PostgreSQL                                          |
-| Frontend | React, TypeScript, Recharts                         |
+| Frontend | React 19, TypeScript, Vite, React Router, Recharts  |
 | Testing  | JUnit 5, Spring Boot Test / MockMvc, Jest, React Testing Library |
 | DevOps   | Docker, GitHub Actions                              |
 
@@ -32,6 +32,13 @@ fairline/
 ├── frontend/   # React + TypeScript web app
 └── docs/       # Design notes (data sources, wireframes)
 ```
+
+## Run it locally
+
+Requires Java 21, Node.js 20.19+ and PostgreSQL.
+
+1. Set up and start the backend: see [backend/README.md](backend/README.md). It serves the API on `http://localhost:8080`.
+2. In a second terminal, start the frontend: see [frontend/README.md](frontend/README.md). Then open `http://localhost:5173`.
 
 ## Roadmap
 
@@ -59,9 +66,9 @@ Phases are ordered because each builds on the previous one. Phase 5 is optional.
 - [x] Comparison logic: record an opportunity when model vs. market exceeds a configurable threshold
 
 ### Phase 4 — React frontend
-- [ ] Interactive calculator: enter match stats → instant estimated probabilities
-- [ ] Dashboard of +EV opportunities, sorted by edge size
-- [ ] Chart of model probability vs. market price over time (Recharts)
+- [x] Interactive calculator: enter match stats → instant estimated probabilities
+- [x] Dashboard of +EV opportunities, sorted by edge size
+- [x] Chart of model probability vs. market price over time (Recharts)
 
 ### Phase 5 — Authentication *(optional)*
 - [ ] Basic login with Spring Security + JWT

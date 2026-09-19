@@ -39,6 +39,9 @@ The API is then at `http://localhost:8080`. Data appears within about 30 seconds
 | `GET` | `/api/teams` | Current teams with their home/away scoring and conceding rates |
 | `GET` | `/api/estimate?home=&away=[&homeLambda=&awayLambda=]` | Model λ, 1X2 probabilities and scoreline grid; normalized Kalshi prices if the match is listed |
 | `GET` | `/api/opportunities[?minEdge=0.05]` | Upcoming outcomes where model − market ≥ minEdge, biggest first, plus the last price update time |
+| `GET` | `/api/events` | Matches with market prices, from the last 30 days onwards |
+| `GET` | `/api/events/{id}/history` | Normalized market and in-force model probabilities at each price capture |
+| `GET` | `/api/track-record` | Each flagged outcome judged by its closing edge, with result, hit/miss and overall hit rate |
 | `POST` | `/api/events` | Add a match manually: `{"homeTeam", "awayTeam", "kickoff"}` |
 | `POST` | `/api/events/{id}/prices` | Enter prices manually: `{"HOME": {"bid", "ask"}, "DRAW": {...}, "AWAY": {...}}` |
 
