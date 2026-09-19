@@ -8,6 +8,12 @@ A full-stack probability modeling tool (Java/Spring Boot, React, PostgreSQL) tha
 2. **Market** — Prices for the same event are pulled from a prediction market ([Kalshi](https://kalshi.com)), with manual/CSV upload as a fallback, and stored as timestamped snapshots.
 3. **Edge** — When the gap between the model's probability and the market's implied probability exceeds a configurable threshold, Fairline flags it as a potential +EV pricing inefficiency.
 
+## MVP scope
+
+- **Sport:** Soccer — English Premier League
+- **Market:** 1X2 match result (home win / draw / away win)
+- **Out of scope for now:** other leagues, totals (over/under), handicaps, player props. These can be added after the MVP, since the same Poisson scoreline grid covers them.
+
 ## Tech stack
 
 | Layer    | Technologies                                        |
@@ -31,7 +37,7 @@ fairline/
 Phases are ordered because each builds on the previous one. Phase 5 is optional.
 
 ### Phase 0 — Planning & setup
-- [ ] Pick one sport and market type for the MVP (e.g. soccer, 1X2 match result)
+- [x] Pick one sport and market type for the MVP: Premier League, 1X2 match result
 - [ ] Review the Kalshi API docs; if access is insufficient, fall back to manual/CSV price upload
 - [ ] Wireframe 3 screens: calculator, opportunities dashboard, history
 - [x] Create the repository with an initial README and folder structure
