@@ -2,6 +2,10 @@ package io.github.ianhndz14.fairline.api;
 
 import io.github.ianhndz14.fairline.domain.Outcome;
 import io.github.ianhndz14.fairline.market.EdgeDetector;
+import io.github.ianhndz14.fairline.market.HistoryService;
+import io.github.ianhndz14.fairline.market.HistoryService.EventSummary;
+import io.github.ianhndz14.fairline.market.HistoryService.History;
+import io.github.ianhndz14.fairline.market.HistoryService.TrackRecord;
 import io.github.ianhndz14.fairline.market.MatchService;
 import io.github.ianhndz14.fairline.market.MatchService.CreatedEvent;
 import io.github.ianhndz14.fairline.market.MatchService.Estimate;
@@ -43,11 +47,14 @@ public class FairlineController {
     private final MatchService matches;
     private final TeamStats stats;
     private final EdgeDetector edgeDetector;
+    private final HistoryService history;
 
-    public FairlineController(MatchService matches, TeamStats stats, EdgeDetector edgeDetector) {
+    public FairlineController(MatchService matches, TeamStats stats, EdgeDetector edgeDetector,
+                              HistoryService history) {
         this.matches = matches;
         this.stats = stats;
         this.edgeDetector = edgeDetector;
+        this.history = history;
     }
 
     @GetMapping("/teams")
@@ -67,6 +74,21 @@ public class FairlineController {
         double threshold = minEdge != null ? minEdge : edgeDetector.threshold();
         return new Opportunities(matches.lastPriceUpdate().orElse(null), threshold,
                 matches.opportunities(threshold, Instant.now()));
+    }
+
+    @GetMapping("/events")
+    public List<EventSummary> events() {
+        return history.pricedEvents(Instant.now());
+    }
+
+    @GetMapping("/events/{id}/history")
+    public History history(@PathVariable long id) {
+        return history.history(id);
+    }
+
+    @GetMapping("/track-record")
+    public TrackRecord trackRecord() {
+        return history.trackRecord(Instant.now());
     }
 
     @PostMapping("/events")

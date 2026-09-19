@@ -98,7 +98,7 @@ public class EdgeDetector {
      * Mid prices scaled to sum to 1. Kalshi's three prices add up to slightly more than 1 (the market's
      * margin), so they have to be normalized before comparing them with the model's probabilities.
      */
-    static Map<Outcome, Double> normalizedMidPrices(Map<Outcome, PriceSnapshot> latest) {
+    public static Map<Outcome, Double> normalizedMidPrices(Map<Outcome, PriceSnapshot> latest) {
         Map<Outcome, Double> mid = new EnumMap<>(Outcome.class);
         latest.forEach((o, s) -> mid.put(o, s.getYesBid().add(s.getYesAsk()).doubleValue() / 2));
         double total = mid.values().stream().mapToDouble(Double::doubleValue).sum();

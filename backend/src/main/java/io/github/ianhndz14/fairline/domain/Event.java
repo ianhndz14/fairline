@@ -39,6 +39,13 @@ public class Event {
         this.awayGoals = awayGoals;
     }
 
+    /** The 1X2 result, or null until the match has been played. */
+    public Outcome result() {
+        if (homeGoals == null) return null;
+        int diff = Integer.compare(homeGoals, awayGoals);
+        return diff > 0 ? Outcome.HOME : diff == 0 ? Outcome.DRAW : Outcome.AWAY;
+    }
+
     public Long getId() { return id; }
     public String getKalshiEventTicker() { return kalshiEventTicker; }
     public String getHomeTeam() { return homeTeam; }
