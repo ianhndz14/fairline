@@ -2,10 +2,11 @@ import { Link, useSearchParams } from 'react-router'
 import { formatKickoff, outcomeLabel, percent, points, timeAgo, useApi, type Opportunities } from '../api'
 
 export default function OpportunitiesPage() {
-  // Minimum edge in percentage points, kept in the URL; empty = the backend's configured threshold.
+  // Minimum edge in percentage points, kept in the URL. Absent = show the backend's configured threshold;
+  // empty = the user cleared the box to type a new value (the default still applies meanwhile).
   const [params, setParams] = useSearchParams()
-  const minEdge = params.get('minEdge') ?? ''
-  const validMinEdge = minEdge.trim() !== '' && Number.isFinite(Number(minEdge))
+  const minEdge = params.get('minEdge')
+  const validMinEdge = minEdge !== null && minEdge.trim() !== '' && Number.isFinite(Number(minEdge))
   const { data, error, loading } = useApi<Opportunities>(
     validMinEdge ? `/api/opportunities?minEdge=${Number(minEdge) / 100}` : '/api/opportunities',
   )
@@ -21,8 +22,8 @@ export default function OpportunitiesPage() {
         <label>
           Minimum edge (pts)
           <input type="number" step="0.5" inputMode="decimal"
-            value={minEdge || (data ? (data.minEdge * 100).toString() : '')}
-            onChange={(e) => setParams(e.target.value ? { minEdge: e.target.value } : {}, { replace: true })} />
+            value={minEdge ?? (data ? (data.minEdge * 100).toString() : '')}
+            onChange={(e) => setParams({ minEdge: e.target.value }, { replace: true })} />
         </label>
         {data && (
           <span className="muted small">
