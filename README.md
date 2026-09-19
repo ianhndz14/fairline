@@ -49,9 +49,9 @@ Phases are ordered because each builds on the previous one. Phase 5 is optional.
 - [x] Unit test with JUnit 5 against hand-calculated cases
 
 ### Phase 2 — Data model & persistence
-- [ ] Entities: `Event`, `Market`, `ModelEstimate`, `PriceSnapshot`, `EdgeLog`
-- [ ] Relationships and constraints in PostgreSQL via Spring Data JPA
-- [ ] Versioned schema migrations with Flyway
+- [x] Entities: `Event`, `Market`, `ModelEstimate`, `PriceSnapshot`, `EdgeLog`
+- [x] Relationships and constraints in PostgreSQL via Spring Data JPA
+- [x] Versioned schema migrations with Flyway
 
 ### Phase 3 — REST API & market data
 - [ ] Endpoints: load an event with stats, get the model estimate, list detected opportunities
