@@ -33,19 +33,29 @@ public class PriceIngestion {
     private final EventRepository events;
     private final MarketRepository markets;
     private final PriceSnapshotRepository snapshots;
+    private final EdgeDetector edgeDetector;
 
     public PriceIngestion(KalshiClient kalshi, EventRepository events, MarketRepository markets,
-                          PriceSnapshotRepository snapshots) {
+                          PriceSnapshotRepository snapshots, EdgeDetector edgeDetector) {
         this.kalshi = kalshi;
         this.events = events;
         this.markets = markets;
         this.snapshots = snapshots;
+        this.edgeDetector = edgeDetector;
     }
 
+    /** Stores fresh prices, then compares every priced match against the model. */
     @Scheduled(fixedDelayString = "${fairline.kalshi.refresh-interval}", initialDelayString = "PT30S")
     @Transactional
     public void refresh() {
-        ingest(kalshi.openEplGames(), Instant.now());
+        Instant now = Instant.now();
+        List<Event> priced = ingest(kalshi.openEplGames(), now);
+        try {
+            int flagged = priced.stream().mapToInt(e -> edgeDetector.evaluate(e, now).size()).sum();
+            log.info("Flagged {} opportunities at threshold {}", flagged, edgeDetector.threshold());
+        } catch (IllegalStateException e) {
+            log.warn("Skipping edge detection: {}", e.getMessage()); // no match results imported yet
+        }
     }
 
     /** Stores prices for matches that haven't kicked off yet; returns those events. */
