@@ -1,0 +1,43 @@
+# ---------- Secrets & environment ----------
+.env
+.env.*
+!.env.example
+# Local Spring profiles (may hold DB passwords / API keys)
+application-local.properties
+application-local.yml
+
+# ---------- Java / Spring Boot ----------
+target/
+build/
+.gradle/
+*.class
+hs_err_pid*
+
+# ---------- Node / React ----------
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ---------- Logs ----------
+*.log
+logs/
+
+# ---------- IDEs & editors ----------
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# ---------- OS files ----------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------- Local-only files ----------
+.claude/
+Fairline-Roadmap.pdf
