@@ -106,10 +106,10 @@ Phases are ordered because each builds on the previous one. Phase 5 is optional.
 
 ### Phase 7 — CI/CD & deployment
 - [x] GitHub Actions running all tests on every push (plus linting, formatting and a Docker image build)
-- [ ] Deploy backend + database (Render + Neon) and frontend (Vercel) — config and steps ready in [docs/deployment.md](docs/deployment.md)
+- [ ] Deploy backend + database (Render + Neon) and frontend (Vercel) — Docker image, blueprint and steps are ready in [docs/deployment.md](docs/deployment.md); deliberately not deployed yet, since a free-tier API that sleeps for a minute makes a worse first impression than the demo above
 - [x] Environment variables and secrets kept out of the codebase
 
 ### Phase 8 — Polish
 - [x] README with screenshots of the calculator and the history/track-record screens
 - [x] Real metrics: resume bullets drafted in [docs/resume-bullets.md](docs/resume-bullets.md); accuracy numbers fill in as matches settle
-- [ ] Link to the live demo
+- [x] Demo people can actually see: the GIF at the top of this README (a live URL goes here if the app is deployed)
