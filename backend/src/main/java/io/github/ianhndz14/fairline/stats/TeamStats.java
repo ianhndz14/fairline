@@ -58,8 +58,13 @@ public class TeamStats {
         ExpectedGoals expectedGoals(String homeTeam, String awayTeam) {
             TeamStrength home = team(homeTeam), away = team(awayTeam);
             return new ExpectedGoals(
-                    PoissonModel.expectedGoals(home.homeScored(), away.awayConceded(), homeAvg),
-                    PoissonModel.expectedGoals(away.awayScored(), home.homeConceded(), awayAvg));
+                    lambda(home.homeScored(), away.awayConceded(), homeAvg),
+                    lambda(away.awayScored(), home.homeConceded(), awayAvg));
+        }
+
+        /** With no goals of this kind in the window (a tiny sample), expect none rather than divide by zero. */
+        private static double lambda(double scoredAvg, double concededAvg, double leagueAvg) {
+            return leagueAvg <= 0 ? 0 : PoissonModel.expectedGoals(scoredAvg, concededAvg, leagueAvg);
         }
     }
 

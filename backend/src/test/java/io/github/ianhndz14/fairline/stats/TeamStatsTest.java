@@ -48,6 +48,14 @@ class TeamStatsTest {
     }
 
     @Test
+    void expectsNoGoalsWhenTheWindowHasNone() {
+        // One 2-0 result: the league has never seen an away goal, so away lambda is 0, not a division by zero.
+        League oneMatch = TeamStats.compute(List.of(played("A", "B", 2, 0)));
+        assertEquals(0, oneMatch.expectedGoals("A", "B").away(), EPS);
+        assertEquals(2.0, oneMatch.expectedGoals("A", "B").home(), EPS);
+    }
+
+    @Test
     void failsClearlyWithoutResults() {
         assertThrows(IllegalStateException.class, () -> TeamStats.compute(List.of()));
     }
