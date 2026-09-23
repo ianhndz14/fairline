@@ -96,5 +96,5 @@ Phases are ordered because each builds on the previous one. Phase 5 is optional.
 
 ### Phase 8 — Polish
 - [ ] README with screenshots or a short demo GIF
-- [ ] Real metrics: events analyzed, model accuracy vs. final results
+- [x] Real metrics: resume bullets drafted in [docs/resume-bullets.md](docs/resume-bullets.md); accuracy numbers fill in as matches settle
 - [ ] Link to the live demo
