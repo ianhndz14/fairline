@@ -1,5 +1,8 @@
 # Fairline
 
+[![CI](https://github.com/ianhndz14/fairline/actions/workflows/ci.yml/badge.svg)](https://github.com/ianhndz14/fairline/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 A full-stack probability modeling tool (Java/Spring Boot, React, PostgreSQL) that estimates sports outcomes with a Poisson distribution model built from scratch, and compares those estimates against live prediction-market prices to flag pricing inefficiencies.
 
 ## How it works
@@ -31,7 +34,7 @@ A full-stack probability modeling tool (Java/Spring Boot, React, PostgreSQL) tha
 fairline/
 ├── backend/    # Spring Boot API + Poisson probability engine
 ├── frontend/   # React + TypeScript web app
-└── docs/       # Design notes (data sources, wireframes)
+└── docs/       # Design notes (data sources, wireframes, deployment)
 ```
 
 ## Run it locally
@@ -40,6 +43,12 @@ Requires Java 21, Node.js 20.19+ and PostgreSQL.
 
 1. Set up and start the backend: see [backend/README.md](backend/README.md). It serves the API on `http://localhost:8080`.
 2. In a second terminal, start the frontend: see [frontend/README.md](frontend/README.md). Then open `http://localhost:5173`.
+
+## Deployment
+
+The API runs as a container on [Render](https://render.com) against a [Neon](https://neon.tech) PostgreSQL database,
+with the frontend on [Vercel](https://vercel.com). Step-by-step instructions, environment variables and free-tier
+caveats are in [docs/deployment.md](docs/deployment.md).
 
 ## Roadmap
 
@@ -81,9 +90,9 @@ Phases are ordered because each builds on the previous one. Phase 5 is optional.
 - [x] Consistent linting and formatting across backend and frontend
 
 ### Phase 7 — CI/CD & deployment
-- [ ] GitHub Actions running all tests on every push
-- [ ] Deploy backend + database (Render or Railway) and frontend (Vercel)
-- [ ] Environment variables and secrets kept out of the codebase
+- [x] GitHub Actions running all tests on every push (plus linting, formatting and a Docker image build)
+- [ ] Deploy backend + database (Render + Neon) and frontend (Vercel) — config and steps ready in [docs/deployment.md](docs/deployment.md)
+- [x] Environment variables and secrets kept out of the codebase
 
 ### Phase 8 — Polish
 - [ ] README with screenshots or a short demo GIF
