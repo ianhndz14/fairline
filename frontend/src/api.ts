@@ -90,9 +90,15 @@ export interface TrackRecord {
   edges: TrackedEdge[]
 }
 
+/**
+ * Where the API lives. Empty in development, where Vite proxies /api to localhost:8080;
+ * set to the deployed API's origin (VITE_API_BASE_URL) in the hosted build.
+ */
+const API_BASE: string = import.meta.env.VITE_API_BASE_URL ?? ''
+
 /** GETs a backend endpoint, throwing the server's problem-detail message on failure. */
 export async function getJson<T>(path: string, signal?: AbortSignal): Promise<T> {
-  const response = await fetch(path, { signal })
+  const response = await fetch(`${API_BASE}${path}`, { signal })
   if (!response.ok) {
     const problem = await response.json().catch(() => null)
     throw new Error(problem?.detail ?? `Request failed (${response.status})`)

@@ -1,0 +1,25 @@
+# Render Blueprint for the Fairline API. The database lives outside Render (see docs/deployment.md),
+# so the DB_* values are set once in the Render dashboard instead of being generated here.
+services:
+  - type: web
+    name: fairline-api
+    runtime: docker
+    plan: free
+    region: oregon
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      # The deployed frontend's origin, e.g. https://fairline.vercel.app
+      - key: CORS_ORIGINS
+        sync: false

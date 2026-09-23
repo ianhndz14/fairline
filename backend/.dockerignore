@@ -1,0 +1,4 @@
+target/
+.env
+.mvn/wrapper/maven-wrapper.jar
+README.md

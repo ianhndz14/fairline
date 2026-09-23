@@ -43,6 +43,14 @@ jobs:
           DB_USERNAME: fairline
           DB_PASSWORD: fairline
 
+  # Render builds this image; a broken Dockerfile should fail here, not during a deploy.
+  docker:
+    name: Backend image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: docker build -t fairline-api backend
+
   frontend:
     name: Frontend (Node 24)
     runs-on: ubuntu-latest
