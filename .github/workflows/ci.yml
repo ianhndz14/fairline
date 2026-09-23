@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    name: Backend (Java 21 + PostgreSQL)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    # The tests run against a real PostgreSQL, the same database the app uses locally.
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: fairline
+          POSTGRES_USER: fairline
+          POSTGRES_PASSWORD: fairline
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      # verify = compile with warnings as errors, run every test, check formatting.
+      - run: ./mvnw --batch-mode --no-transfer-progress verify
+        env:
+          DB_URL: jdbc:postgresql://localhost:5432/fairline
+          DB_USERNAME: fairline
+          DB_PASSWORD: fairline
+
+  frontend:
+    name: Frontend (Node 24)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm test
+      - run: npm run build
