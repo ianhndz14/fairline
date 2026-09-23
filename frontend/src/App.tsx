@@ -7,7 +7,7 @@ import OpportunitiesPage from './pages/OpportunitiesPage'
 // Loaded on demand so the charting library only downloads when someone opens History.
 const HistoryPage = lazy(() => import('./pages/HistoryPage'))
 
-/** Prices older than this mean the ingestion job (every 10 minutes) has stopped. */
+/** Prices older than this mean no fresh market data: no open matches, or the job isn't running. */
 const STALE_AFTER_MS = 20 * 60_000
 
 export default function App() {
@@ -54,7 +54,7 @@ function FeedStatus() {
       <span>EPL · 1X2</span>
       <span className="status-feed">
         <span className={`dot ${data ? (live ? 'live' : 'stale') : ''}`} aria-hidden="true" />
-        {data && !live ? 'Kalshi feed stale' : 'Kalshi feed'}
+        {data && !live ? 'Kalshi feed idle' : 'Kalshi feed'}
       </span>
       {updated && <span>Upd {timeAgo(updated)}</span>}
     </div>

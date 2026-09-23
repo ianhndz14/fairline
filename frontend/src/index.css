@@ -224,8 +224,9 @@ button {
   background: var(--up);
 }
 
+/* No fresh prices: either Kalshi lists no open matches, or the backend isn't collecting. */
 .dot.stale {
-  background: var(--down);
+  background: var(--signal);
 }
 
 @media (max-width: 760px) {

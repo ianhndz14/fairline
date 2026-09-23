@@ -11,12 +11,14 @@ A full-stack probability modeling tool (Java/Spring Boot, React, PostgreSQL) tha
 2. **Market** — Prices for the same event are pulled from a prediction market ([Kalshi](https://kalshi.com)), with manual/CSV upload as a fallback, and stored as timestamped snapshots.
 3. **Edge** — When the gap between the model's probability and the market's implied probability exceeds a configurable threshold, Fairline flags it as a potential +EV pricing inefficiency.
 
+![Fairline demo](docs/images/demo.gif)
+
+*Pick two teams, adjust expected goals, then compare the model with Kalshi's prices over time.*
+
 ## Screens
 
-**Calculator** — pick two teams: expected goals (λ) auto-fill from a year of results and stay editable, the model's
-1X2 probabilities sit next to Kalshi's normalized price, and the matrix shows every scoreline.
-
-![Fairline calculator](docs/images/calculator.png)
+**Calculator** — expected goals (λ) auto-fill from a year of results and stay editable, the model's 1X2
+probabilities sit next to Kalshi's normalized price, and the matrix shows every scoreline.
 
 **History** — how the model and the market moved before kickoff, and how flagged outcomes actually turned out.
 The hit rate is shown next to what the market itself expected, with a warning while the sample is too small to
