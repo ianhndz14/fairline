@@ -137,7 +137,15 @@ function PriceChart({ history, outcome }: { history: History; outcome: Outcome }
             }}
           />
           <Legend wrapperStyle={{ fontFamily: 'var(--mono)', fontSize: 11, textTransform: 'uppercase' }} />
-          <Line name="Model" dataKey="model" type="stepAfter" stroke="var(--signal)" strokeWidth={2} dot={false} />
+          <Line
+            name="Model"
+            dataKey="model"
+            type="stepAfter"
+            stroke="var(--signal)"
+            strokeWidth={2}
+            dot={false}
+            isAnimationActive={false}
+          />
           <Line
             name="Kalshi (normalized)"
             dataKey="market"
@@ -146,6 +154,7 @@ function PriceChart({ history, outcome }: { history: History; outcome: Outcome }
             strokeWidth={1.5}
             strokeDasharray="5 4"
             dot={false}
+            isAnimationActive={false}
           />
         </LineChart>
       </ResponsiveContainer>

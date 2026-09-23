@@ -11,6 +11,19 @@ A full-stack probability modeling tool (Java/Spring Boot, React, PostgreSQL) tha
 2. **Market** — Prices for the same event are pulled from a prediction market ([Kalshi](https://kalshi.com)), with manual/CSV upload as a fallback, and stored as timestamped snapshots.
 3. **Edge** — When the gap between the model's probability and the market's implied probability exceeds a configurable threshold, Fairline flags it as a potential +EV pricing inefficiency.
 
+## Screens
+
+**Calculator** — pick two teams: expected goals (λ) auto-fill from a year of results and stay editable, the model's
+1X2 probabilities sit next to Kalshi's normalized price, and the matrix shows every scoreline.
+
+![Fairline calculator](docs/images/calculator.png)
+
+**History** — how the model and the market moved before kickoff, and how flagged outcomes actually turned out.
+The hit rate is shown next to what the market itself expected, with a warning while the sample is too small to
+mean anything.
+
+![Fairline history and track record](docs/images/history.png)
+
 ## MVP scope
 
 - **Sport:** Soccer — English Premier League
@@ -95,6 +108,6 @@ Phases are ordered because each builds on the previous one. Phase 5 is optional.
 - [x] Environment variables and secrets kept out of the codebase
 
 ### Phase 8 — Polish
-- [ ] README with screenshots or a short demo GIF
+- [x] README with screenshots of the calculator and the history/track-record screens
 - [x] Real metrics: resume bullets drafted in [docs/resume-bullets.md](docs/resume-bullets.md); accuracy numbers fill in as matches settle
 - [ ] Link to the live demo

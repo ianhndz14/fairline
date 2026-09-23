@@ -19,7 +19,7 @@ at the bottom. Keep only the 2–3 that fit the role you're applying to.
 
 > Automated the data pipeline with scheduled jobs: 380+ historical results per season imported from CSV, Kalshi's
 > public market API polled every 10 minutes into timestamped price snapshots, and normalized market probabilities
-> compared against the model to log opportunities — **[fill] matches analyzed** to date.
+> compared against the model to log opportunities — **420+ matches imported** across two seasons.
 
 ## CI/CD framing
 
@@ -30,8 +30,9 @@ at the bottom. Keep only the 2–3 that fit the role you're applying to.
 ## Honest-modelling framing (good interview bait)
 
 > Measured the model against the market instead of assuming it beats it: each flagged outcome is judged once by its
-> closing edge, and the dashboard reports hit rate next to the market's own implied probability — currently
-> **[fill]% hit rate over [fill] settled outcomes** vs **[fill]%** implied by the market.
+> closing edge, and the app reports hit rate next to the market's own implied probability — currently
+> **30% hit rate over 10 settled outcomes**, against **22.6%** implied by the market (too small a sample to claim
+> an edge, which the app says on screen).
 
 ## How to get the numbers
 
